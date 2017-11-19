@@ -50,7 +50,7 @@ public class Run implements ApplicationRunnable<Item> {
 		 * We ask the Application to call the following run function every seconds. This
 		 * method just refresh the component.
 		 */
-		Application.timer(10, new TimerRunnable() {
+		Application.timer(33, new TimerRunnable() {
 
 			public void run(TimerTask timerTask) {
 				arg0.refresh();
