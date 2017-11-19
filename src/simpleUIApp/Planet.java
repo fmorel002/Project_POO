@@ -1,6 +1,7 @@
 package simpleUIApp;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Random;
 import java.awt.geom.Point2D;
@@ -40,6 +41,19 @@ public class Planet extends Entity{
 	{
 		return this.type;
 	}
+	
+	@Override
+	public void draw(Graphics2D arg0) {
+		Point2D pos = this.center;
+		int x = (int) pos.getX(), y = (int) pos.getY(), w = this.getWidth();
+		arg0.setColor(c);
+		//arg0.fillRect(x - w / 2, y - w / 2, w, w);
+		arg0.fillOval(x - w / 2, y - w / 2, w, w);
+		arg0.setColor(Color.black);
+		String text = "0";
+		arg0.drawString(text, (int)pos.getX() - arg0.getFontMetrics().stringWidth(text)/2, (int)pos.getY() +5);
+	}
+	
 	
 	/**
 	 * @brief Found a valid position to place a new planet
