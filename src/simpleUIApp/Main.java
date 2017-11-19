@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import fr.ubordeaux.simpleUI.*;
+import simpleUIApp.Planet.PlanetType;
 
 public class Main {
 	public static void main(String[] args) {
@@ -20,14 +21,20 @@ public class Main {
 		ArrayList<Planet> listPlanets = new ArrayList<Planet>();
 		
 		// On initialise x planets
-		for(int i = 0; i < 5; i++)
+		for(int i = 0; i < 8; i++)
 		{
 			Point2D p = Planet.findPlanetPosition(win_width, win_height, listPlanets,50);
 			
 			if(p.getX() != -1)
-			{
-				listPlanets.add(new Planet(p.getX(), p.getY(), 50, 1.0));
-				for (int j = 0; j < 5; j++) {
+			{	
+				if( i == 0)
+					listPlanets.add(new Planet(p.getX(), p.getY(), 50, 1.0, PlanetType.PLAYER));
+				else if(i == 1)
+					listPlanets.add(new Planet(p.getX(), p.getY(), 50, 1.0, PlanetType.IA));
+				else
+					listPlanets.add(new Planet(p.getX(), p.getY(), 50, 1.0, PlanetType.NEUTRAL));
+					
+				for (int j = 0; j < 10; j++) {
 					
 					// On créer une liste de vaisseau qu'on associe a la dernière plnaète crééer
 					spaceShipList.add(new SpaceShip(random.nextInt(win_width), random.nextInt(win_height), 10, listPlanets.get(listPlanets.size()-1)));

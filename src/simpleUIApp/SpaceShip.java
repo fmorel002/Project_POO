@@ -2,13 +2,21 @@ package simpleUIApp;
 
 import java.awt.Color;
 
+import simpleUIApp.Planet.PlanetType;
+
 class SpaceShip extends Entity {
 
 	private Item objective;
 	private Planet belongs;
 	
 	public SpaceShip(double x, double y, int w, Planet p) {
-		super(x, y, w, Color.blue);
+		super(x, y, w, new Color(119,136,153));
+		
+		if(p.getType() == PlanetType.PLAYER)
+			this.setColor(new Color(46,139,87));
+		else if((p.getType() == PlanetType.IA))
+			this.setColor(new Color(165,42,42));
+		
 		objective = this;
 		belongs = p;
 	}

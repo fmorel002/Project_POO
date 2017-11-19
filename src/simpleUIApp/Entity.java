@@ -12,7 +12,12 @@ public class Entity extends Item{
 		super(x, y, w);
 		c = col;
 	}
-
+	
+	public void setColor(Color c)
+	{
+		this.c = c;
+	}
+	
 	@Override
 	public void move() {
 			
@@ -23,7 +28,8 @@ public class Entity extends Item{
 		Point2D pos = this.center;
 		int x = (int) pos.getX(), y = (int) pos.getY(), w = this.getWidth();
 		arg0.setColor(c);
-		arg0.fillRect(x - w / 2, y - w / 2, w, w);
+		//arg0.fillRect(x - w / 2, y - w / 2, w, w);
+		arg0.fillOval(x - w / 2, y - w / 2, w, w);
 	}
 
 	@Override

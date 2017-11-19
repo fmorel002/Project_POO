@@ -7,11 +7,21 @@ import java.awt.geom.Point2D;
 
 public class Planet extends Entity{
 	
+	public enum PlanetType { PLAYER, IA, NEUTRAL;}
+	
 	private ArrayList<SpaceShip> shipsAllPlanets;
 	private double speedProduction;
+	private PlanetType type;
 	
-	public Planet(double x, double y, int w, double sP) {
-		super(x, y, w, Color.red);
+	public Planet(double x, double y, int w, double sP, PlanetType type) {
+		
+		super(x, y, w, new Color(119,136,153));
+		this.type = type;
+		if(type == PlanetType.PLAYER)
+			this.setColor(new Color(46,139,87));
+		else if(type == PlanetType.IA)
+			this.setColor(new Color(165,42,42));
+		
 		this.speedProduction = sP;
 	}
 
@@ -26,16 +36,19 @@ public class Planet extends Entity{
 		this.shipsAllPlanets = shipsAllPlanets;
 	}
 	
+	public PlanetType getType()
+	{
+		return this.type;
+	}
 	
 	/**
-	 * @brief found a valid position to place a new planet
+	 * @brief Found a valid position to place a new planet
 	 * @param width : width of the window
 	 * @param height : height of the window
 	 * @param planets : List of all planet on the map
 	 * @param pos : pos of the new planet to generate
 	 * 
 	 */
-	
 	public static Point2D findPlanetPosition(int width, int height, ArrayList<Planet> planets, int planetSize)
 	{
 		final int nbTry = 1000; // nombre d'essai max pour trouver une pos valide
