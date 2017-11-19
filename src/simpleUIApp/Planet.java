@@ -10,7 +10,7 @@ public class Planet extends Entity{
 	
 	public enum PlanetType { PLAYER, IA, NEUTRAL;}
 	
-	private ArrayList<SpaceShip> shipsAllPlanets;
+	private static ArrayList<SpaceShip> shipsAllPlanets;
 	private double speedProduction;
 	private PlanetType type;
 	
@@ -33,8 +33,8 @@ public class Planet extends Entity{
 			}
 		}
 	}
-	public void setShipsAllPlanets(ArrayList<SpaceShip> shipsAllPlanets) {
-		this.shipsAllPlanets = shipsAllPlanets;
+	public static void setShipsAllPlanets(ArrayList<SpaceShip> ships) {
+		shipsAllPlanets = ships;
 	}
 	
 	public PlanetType getType()

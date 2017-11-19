@@ -38,11 +38,11 @@ public class Main {
 						// On créer une liste de vaisseaux qu'on associe à la dernière planète créer
 						spaceShipList.add(new SpaceShip(random.nextInt(win_width), random.nextInt(win_height), 10,
 								listPlanets.get(listPlanets.size() - 1)));
-
-						// On associe à la planète sa liste de vaisseaux
-						listPlanets.get(listPlanets.size() - 1).setShipsAllPlanets(spaceShipList);
 					}
 				}
+				
+				// On associe à la planète sa liste de vaisseaux
+				Planet.setShipsAllPlanets(spaceShipList);
 			}
 		}
 
