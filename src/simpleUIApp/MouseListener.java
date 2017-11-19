@@ -42,7 +42,12 @@ public class MouseListener implements MouseHandler<Item> {
 			for (Item item : dragList) {
 				
 				if(item instanceof Planet && ((Planet) item).getType() == PlanetType.PLAYER)
-					item.setObjective(arg0.get(0));
+				{
+					Planet p = (Planet) item;
+					p.setObjective(arg0.get(0));
+					p.generateShips(arg0.get(0));
+				}
+					
 			}
 		}
 	}

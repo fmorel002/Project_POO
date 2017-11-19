@@ -4,6 +4,8 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Random;
 
+import com.sun.glass.ui.Timer;
+
 import fr.ubordeaux.simpleUI.*;
 import simpleUIApp.Planet.PlanetType;
 
@@ -24,11 +26,11 @@ public class Main {
 
 			if (p.getX() != -1) {
 				if (i == 0)
-					listPlanets.add(new Planet(p.getX(), p.getY(), 50, 1.0, PlanetType.PLAYER));
+					listPlanets.add(new Planet(p.getX(), p.getY(), 50, 1.0, PlanetType.PLAYER, allItemList,listPlanets));
 				else if (i == 1)
-					listPlanets.add(new Planet(p.getX(), p.getY(), 50, 1.0, PlanetType.IA));
+					listPlanets.add(new Planet(p.getX(), p.getY(), 50, 1.0, PlanetType.IA, allItemList,listPlanets));
 				else
-					listPlanets.add(new Planet(p.getX(), p.getY(), 50, 1.0, PlanetType.NEUTRAL));
+					listPlanets.add(new Planet(p.getX(), p.getY(), 50, 1.0, PlanetType.NEUTRAL, allItemList,listPlanets));
 
 				// Si ce n'est pas une planète neutre : on ajoute des vaisseaux
 				if (listPlanets.get(listPlanets.size() - 1).getType() != PlanetType.NEUTRAL) {
@@ -36,8 +38,8 @@ public class Main {
 					for (int j = 0; j < 10; j++) {
 						
 						// On créer une liste de vaisseaux qu'on associe à la dernière planète créer
-						spaceShipList.add(new SpaceShip(random.nextInt(win_width), random.nextInt(win_height), 10,
-								listPlanets.get(listPlanets.size() - 1)));
+						/*spaceShipList.add(new SpaceShip(random.nextInt(win_width), random.nextInt(win_height), 10,
+								listPlanets.get(listPlanets.size() - 1)));*/
 					}
 				}
 				
@@ -45,7 +47,7 @@ public class Main {
 				Planet.setShipsAllPlanets(spaceShipList);
 			}
 		}
-
+		
 		allItemList.addAll(listPlanets);
 		allItemList.addAll(spaceShipList);
 

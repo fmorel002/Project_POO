@@ -10,6 +10,7 @@ import fr.ubordeaux.simpleUI.ApplicationRunnable;
 import fr.ubordeaux.simpleUI.Arena;
 import fr.ubordeaux.simpleUI.TimerRunnable;
 import fr.ubordeaux.simpleUI.TimerTask;
+import simpleUIApp.Planet.PlanetType;
 
 public class Run implements ApplicationRunnable<Item> {
 
@@ -56,6 +57,23 @@ public class Run implements ApplicationRunnable<Item> {
 				arg0.refresh();
 				for (Item item : arg1) {
 					item.move();
+				}
+			}
+
+		});
+		
+		Application.timer(500, new TimerRunnable() {
+
+			public void run(TimerTask timerTask) {
+				arg0.refresh();
+				for (Item item : arg1) {
+					
+					if(item instanceof Planet)
+					{
+						Planet p = (Planet) item;
+						p.update();
+					}
+					
 				}
 			}
 

@@ -6,23 +6,38 @@ import simpleUIApp.Planet.PlanetType;
 
 class SpaceShip extends Entity {
 
+	
+	
 	private Item objective;
 	private Planet belongs;
+	private boolean IA;
 	
 	public SpaceShip(double x, double y, int w, Planet p) {
 		super(x, y, w, new Color(119,136,153));
 		
 		if(p.getType() == PlanetType.PLAYER)
+		{
 			this.setColor(new Color(46,139,87));
+			this.IA = false;
+		}
+			
 		else if((p.getType() == PlanetType.IA))
+		{
 			this.setColor(new Color(165,42,42));
-		
+			this.IA = true;
+		}
+			
 		objective = this;
 		belongs = p;
 	}
 
 	public Planet getBelongs() {
 		return belongs;
+	}
+	
+	public boolean IsIaShip()
+	{
+		return IA;
 	}
 
 	public void setBelongs(Planet belongs) {
@@ -49,7 +64,9 @@ class SpaceShip extends Entity {
 			}
 			center.setLocation(newx, newy);
 		} else {
+			//this.belongs = (Planet) objective;
 			objective = this;
+			this.belongs = Planet.getPlanetFromCoord(this.getLocation());
 		}
 	}
 }
