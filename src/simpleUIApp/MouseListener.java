@@ -5,6 +5,7 @@ import java.util.List;
 
 import fr.ubordeaux.simpleUI.KeyPress;
 import fr.ubordeaux.simpleUI.MouseHandler;
+import simpleUIApp.Planet.PlanetType;
 
 public class MouseListener implements MouseHandler<Item> {
 
@@ -39,7 +40,9 @@ public class MouseListener implements MouseHandler<Item> {
 		System.out.println("Drag& Drop :" + dragList + " => " + arg0 + " using " + arg1.toString());
 		if(!arg0.isEmpty()){
 			for (Item item : dragList) {
-				item.setObjective(arg0.get(0));
+				
+				if(item instanceof Planet && ((Planet) item).getType() == PlanetType.PLAYER)
+					item.setObjective(arg0.get(0));
 			}
 		}
 	}
