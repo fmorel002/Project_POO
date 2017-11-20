@@ -20,7 +20,7 @@ public class Planet extends Entity {
 	private int nbShip = 0;
 
 	public Planet(double x, double y, int w, double sP, PlanetType type, ArrayList<Item> it,
-			ArrayList<Planet> planets) {
+				  ArrayList<Planet> planets) {
 
 		super(x, y, w, new Color(119, 136, 153));
 		this.type = type;
@@ -28,6 +28,7 @@ public class Planet extends Entity {
 			this.setColor(new Color(46, 139, 87));
 		else if (type == PlanetType.IA)
 			this.setColor(new Color(165, 42, 42));
+
 
 		this.speedProduction = sP;
 		allItem = it;
@@ -75,26 +76,28 @@ public class Planet extends Entity {
 
 				}
 				nbShipOnThisPlanet++;
-
 				if (s.IsIaShip())
 					nbIaShip++;
 				else
 					nbPlayerShip++;
 			}
 		}
-
+		if(this.nbShip == 0){
+			this.nbShip = nbShipOnThisPlanet;
+		}
 	}
 
 	public void generateShips(Item it) {
-		if (nbShip >= 5) {
-			for (int i = 0; i < 5; i++) {
+		if (nbShip >= 2) {
+			for (int i = 0; i < nbShip/2; i++) {
 				SpaceShip ss = new SpaceShip(this.center.getX() + 25, this.center.getY() + 25, 10, this);
 				ss.setObjective(it);
 				shipsAllPlanets.add(ss);
 				allItem.add(ss);
 
 			}
-			nbShip -= 5;
+			System.out.println("Sent : " + nbShip/2 + " ships");
+			nbShip = nbShip/2;
 		}
 	}
 
@@ -130,13 +133,11 @@ public class Planet extends Entity {
 	 *            : height of the window
 	 * @param planets
 	 *            : List of all planet on the map
-	 * @param pos
-	 *            : pos of the new planet to generate
 	 * 
 	 */
 	public static Point2D findPlanetPosition(int width, int height, ArrayList<Planet> planets, int planetSize) {
 		final int nbTry = 1000; // nombre d'essai max pour trouver une pos valide
-		final int spacing = planetSize + 30; // on choisi l'espacement entre les planètes
+		final int spacing = planetSize + 30; // on choisi l'espacement entre les planï¿½tes
 		boolean isValidPos = true;
 		Random random = new Random();
 		Point2D pos = new Point2D.Double(0, 0);
@@ -148,7 +149,7 @@ public class Planet extends Entity {
 			int y = random.nextInt((height - (planetSize / 2)) + 1 - (planetSize / 2)) + (planetSize / 2);
 			pos.setLocation(x, y);
 
-			// Si c'est la première planete, son emplacement est forcement valide
+			// Si c'est la premiï¿½re planete, son emplacement est forcement valide
 			if (planets.size() == 0)
 				isValidPos = true;
 
@@ -161,7 +162,7 @@ public class Planet extends Entity {
 
 		} while (!isValidPos && nbTryCpt < nbTry);
 
-		// Au bout de "nbTry" essais, on arrête de chercher une position valide et on
+		// Au bout de "nbTry" essais, on arrï¿½te de chercher une position valide et on
 		// affiche une erreur
 		if (nbTryCpt == nbTry) {
 			System.out.println("Impossible de trouver une position valide pour une nouvelle planete");
