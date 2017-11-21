@@ -21,32 +21,36 @@ public class Main {
 		ArrayList<Planet> listPlanets = new ArrayList<Planet>();
 
 		// On initialise x planets
-		for (int i = 0; i < 8; i++) {
+		int i = 0;
+		int cptPlanete = 0;
+		while (i < 8) {
 			Point2D p = Planet.findPlanetPosition(win_width, win_height, listPlanets, 50);
 
 			if (p.getX() != -1) {
-				if (i == 0)
+				if (cptPlanete == 0)
 					listPlanets.add(new Planet(p.getX(), p.getY(), 50, 1.0, PlanetType.PLAYER, allItemList,listPlanets));
-				else if (i == 1)
+				else if (cptPlanete == 1)
 					listPlanets.add(new Planet(p.getX(), p.getY(), 50, 1.0, PlanetType.IA, allItemList,listPlanets));
 				else
 					listPlanets.add(new Planet(p.getX(), p.getY(), 50, 1.0, PlanetType.NEUTRAL, allItemList,listPlanets));
 
-				// Si ce n'est pas une planète neutre : on ajoute des vaisseaux
-				if (listPlanets.get(listPlanets.size() - 1).getType() != PlanetType.NEUTRAL) {
+				// Si ce n'est pas une planï¿½te neutre : on ajoute des vaisseaux
+				/*if (listPlanets.get(listPlanets.size() - 1).getType() != PlanetType.NEUTRAL) {
 
 					for (int j = 0; j < 10; j++) {
 						
-						// On créer une liste de vaisseaux qu'on associe à la dernière planète créer
-						/*spaceShipList.add(new SpaceShip(random.nextInt(win_width), random.nextInt(win_height), 10,
-								listPlanets.get(listPlanets.size() - 1)));*/
+						// On crï¿½er une liste de vaisseaux qu'on associe ï¿½ la derniï¿½re planï¿½te crï¿½er
+						spaceShipList.add(new SpaceShip(random.nextInt(win_width), random.nextInt(win_height), 10,
+								listPlanets.get(listPlanets.size() - 1)));
 					}
-				}
-				
-				// On associe à la planète sa liste de vaisseaux
-				Planet.setShipsAllPlanets(spaceShipList);
+				}*/
+				cptPlanete++;
 			}
+			i++;
 		}
+
+		// On associe ï¿½ la planï¿½te sa liste de vaisseaux
+		Planet.setShipsAllPlanets(spaceShipList);
 		
 		allItemList.addAll(listPlanets);
 		allItemList.addAll(spaceShipList);

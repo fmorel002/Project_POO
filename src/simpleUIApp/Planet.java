@@ -62,8 +62,7 @@ public class Planet extends Entity {
 
 		for (SpaceShip s : shipsAllPlanets) {
 			if (s.getBelongs() == this) {
-
-				if (this.type == PlanetType.NEUTRAL) {
+				if(this.type == PlanetType.NEUTRAL){
 					if (s.IsIaShip()) {
 						this.type = PlanetType.IA;
 						this.setColor(new Color(165, 42, 42));
@@ -73,7 +72,6 @@ public class Planet extends Entity {
 						this.type = PlanetType.PLAYER;
 						this.setColor(new Color(46, 139, 87));
 					}
-
 				}
 				nbShipOnThisPlanet++;
 				if (s.IsIaShip())
