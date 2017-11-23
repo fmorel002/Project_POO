@@ -3,7 +3,9 @@ package simpleUIApp;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Random;
+
 import java.awt.geom.Point2D;
 
 public class Planet extends Entity {
@@ -55,48 +57,53 @@ public class Planet extends Entity {
 	public void update() {
 		if (this.getType() != PlanetType.NEUTRAL)
 			nbShip++;
-
-		int nbShipOnThisPlanet = 0;
-		int nbPlayerShip = 0;
-		int nbIaShip = 0;
-
-		for (SpaceShip s : shipsAllPlanets) {
-			if (s.getBelongs() == this) {
-				if(this.type == PlanetType.NEUTRAL){
-					if (s.IsIaShip()) {
-						this.type = PlanetType.IA;
-						this.setColor(new Color(165, 42, 42));
+		
+		Iterator<SpaceShip> it = shipsAllPlanets.iterator();
+		
+		while(it.hasNext()){
+			SpaceShip ss = it.next();
+				if (ss.getBelongs() == this) { 
+								
+				// Si un ship arrive sur une planète on le
+				if(this.contains(ss.getLocation()) && !ss.getMoving())
+				{
+					if (!ss.IsIaShip() && this.type == PlanetType.PLAYER)
+					{
+						this.nbShip ++;
 					}
-
-					else {
-						this.type = PlanetType.PLAYER;
-						this.setColor(new Color(46, 139, 87));
+					else if(this.type == PlanetType.IA || this.type == PlanetType.NEUTRAL){
+						this.nbShip--;
+						if(this.nbShip < 0){
+							this.type = PlanetType.PLAYER;
+							this.setColor(new Color(46, 139, 87));
+							this.nbShip = this.nbShip *(-1);
+						}
 					}
+					it.remove();
+					allItem.remove(ss);
 				}
-				nbShipOnThisPlanet++;
-				if (s.IsIaShip())
-					nbIaShip++;
-				else
-					nbPlayerShip++;
 			}
-		}
-		if(this.nbShip == 0){
-			this.nbShip = nbShipOnThisPlanet;
 		}
 	}
 
-	public void generateShips(Item it) {
-		if (nbShip >= 2) {
-			for (int i = 0; i < nbShip/2; i++) {
+	public void generateShips(Item it, String key) {
+		int percentToSend = 0;
+		if(key == "UNKNOWN")
+			percentToSend = 2;
+		else if(key == "CRTL")
+			percentToSend = 3;
+		else if(key == "SHIFT")
+			percentToSend = 1;
+		
+		int shipsToSend = nbShip/percentToSend;
+		for (int i = 0; i < shipsToSend; i++) {
 				SpaceShip ss = new SpaceShip(this.center.getX() + 25, this.center.getY() + 25, 10, this);
 				ss.setObjective(it);
 				shipsAllPlanets.add(ss);
 				allItem.add(ss);
-
-			}
-			System.out.println("Sent : " + nbShip/2 + " ships");
-			nbShip = nbShip/2;
 		}
+		System.out.println("Sent :  " + shipsToSend +" ships");
+		nbShip = nbShip - shipsToSend;
 	}
 
 	/**
@@ -168,5 +175,12 @@ public class Planet extends Entity {
 		}
 		return pos;
 
+	}
+
+	public void updateNeutral() {
+		if(this.type == PlanetType.NEUTRAL){
+			nbShip++;
+		}
+		
 	}
 }

@@ -1,5 +1,6 @@
 package simpleUIApp;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.swing.JFrame;
@@ -16,10 +17,15 @@ public class Run implements ApplicationRunnable<Item> {
 
 	private int width;
 	private int height;
+	private boolean isGO;
+	private boolean isWon;
+	ArrayList<Planet> planets;
 
-	public Run(int width, int height) {
+	public Run(int width, int height, ArrayList<Planet> al) {
 		this.width = width;
 		this.height = height;
+		this.planets = al;
+		
 	}
 
 	@Override
@@ -41,6 +47,8 @@ public class Run implements ApplicationRunnable<Item> {
 		frame.add(arg0.createComponent(this.width, this.height, mouseHandler, keyListener));
 		frame.pack();
 		frame.setVisible(true);
+		this.isWon = false;
+		this.isGO = false;
 
 		/*
 		 * We initially draw the component
@@ -65,15 +73,47 @@ public class Run implements ApplicationRunnable<Item> {
 		Application.timer(500, new TimerRunnable() {
 
 			public void run(TimerTask timerTask) {
-				arg0.refresh();
-				for (Item item : arg1) {
+				int cptIAP = 0, cptPP = 0;
+				for (Planet p : planets) {
+					p.update();
 					
-					if(item instanceof Planet)
+					// Si la partie n'est pas terminé
+					if(!isGO)
 					{
-						Planet p = (Planet) item;
-						p.update();
+						
+						
+						if(p.getType() == PlanetType.IA)
+							cptIAP++;
+						else if(p.getType() == PlanetType.PLAYER)
+							cptPP++;
+						
 					}
+				}
+				
+				if((cptIAP == 0 || cptPP == 0) && isGO == false){
+					isGO = true;
 					
+					if(cptPP == 0){
+						isWon = false;
+						System.out.println("** YOU LOSE !  **");
+					}
+						
+					else{
+						isWon = true;
+						System.out.println("** YOU WIN !  **");
+					}
+						
+				}
+			}
+
+		});
+		
+		
+		Application.timer(1500, new TimerRunnable() {
+
+			public void run(TimerTask timerTask) {
+				for (Planet p : planets) {
+					p.updateNeutral();
 				}
 			}
 

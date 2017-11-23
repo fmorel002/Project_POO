@@ -2,9 +2,7 @@ package simpleUIApp;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.Random;
 
-import com.sun.glass.ui.Timer;
 
 import fr.ubordeaux.simpleUI.*;
 import simpleUIApp.Planet.PlanetType;
@@ -14,7 +12,6 @@ public class Main {
 
 		final int win_width = 800;
 		final int win_height = 600;
-		Random random = new Random();
 
 		ArrayList<Item> allItemList = new ArrayList<Item>();
 		ArrayList<SpaceShip> spaceShipList = new ArrayList<SpaceShip>();
@@ -56,7 +53,7 @@ public class Main {
 		allItemList.addAll(spaceShipList);
 
 		Manager manager = new Manager();
-		Run r = new Run(win_width, win_height);
+		Run r = new Run(win_width, win_height,listPlanets);
 
 		/*
 		 * Call the run method of Application providing an initial item Collection, an

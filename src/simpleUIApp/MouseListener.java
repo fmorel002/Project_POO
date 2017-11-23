@@ -45,7 +45,7 @@ public class MouseListener implements MouseHandler<Item> {
 				{
 					Planet p = (Planet) item;
 					p.setObjective(arg0.get(0));
-					p.generateShips(arg0.get(0));
+					p.generateShips(arg0.get(0), arg1.toString());
 				}
 					
 			}

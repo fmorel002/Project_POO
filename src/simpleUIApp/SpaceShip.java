@@ -1,6 +1,7 @@
 package simpleUIApp;
 
 import java.awt.Color;
+import java.awt.geom.Point2D;
 
 import simpleUIApp.Planet.PlanetType;
 
@@ -11,9 +12,11 @@ class SpaceShip extends Entity {
 	private Item objective;
 	private Planet belongs;
 	private boolean IA;
+	private boolean isMoving;
 	
 	public SpaceShip(double x, double y, int w, Planet p) {
 		super(x, y, w, new Color(119,136,153));
+		isMoving = false;
 		
 		if(p.getType() == PlanetType.PLAYER)
 		{
@@ -35,6 +38,14 @@ class SpaceShip extends Entity {
 		return belongs;
 	}
 	
+	public boolean getMoving() {
+		return isMoving;
+	}
+	
+	public Item getObjective() {
+		return objective;
+	}
+	
 	public boolean IsIaShip()
 	{
 		return IA;
@@ -50,8 +61,11 @@ class SpaceShip extends Entity {
 
 	public void move() {
 		if (!objective.contains(this.center)) {
+			isMoving = true;
 			double newx = center.getX();
 			double newy = center.getY();
+			
+			
 			if (newx > objective.getLocation().getX()) {
 				newx--;
 			} else {
@@ -62,9 +76,24 @@ class SpaceShip extends Entity {
 			} else {
 				newy++;
 			}
-			center.setLocation(newx, newy);
+			
+			Point2D tmp = new Point2D.Double(newx,newy);
+			if(Planet.getPlanetFromCoord(tmp) == null)
+			{
+				center.setLocation(newx, newy);
+			}
+			else if(objective == Planet.getPlanetFromCoord(tmp)){
+				center.setLocation(newx, newy);
+			}
+			//New PathFinding
+			else{
+				center.setLocation(newx + 5, newy);
+			}
+			
+			
 		} else {
-			//this.belongs = (Planet) objective;
+			//Quand bâteau est arrivé sur la planète.
+			isMoving = false;
 			objective = this;
 			this.belongs = Planet.getPlanetFromCoord(this.getLocation());
 		}
