@@ -87,10 +87,35 @@ class SpaceShip extends Entity {
 			}
 			//New PathFinding
 			else{
-				center.setLocation(newx + 5, newy);
+				double planX = Planet.getPlanetFromCoord(tmp).getLocation().getX();
+				double planY = Planet.getPlanetFromCoord(tmp).getLocation().getY();
+				int planWidth = Planet.getPlanetFromCoord(tmp).getWidth();
+
+				/*System.out.println("Début");
+				System.out.println("plan x : " + planX);
+				System.out.println("plan y : " +planY);
+				System.out.println("plan wid : " +planWidth);
+				System.out.println("new x : " +newx);
+				System.out.println("new y : " +newy);
+				System.out.println("Fin");*/
+
+				if(planX > newx && planY + planWidth > newy){
+					center.setLocation(newx - 3, newy - 2);
+					//System.out.println("route 1");
+				}
+				else if(planX + planWidth > newx && planY + planWidth > newy){
+					center.setLocation(newx + 2, newy - 1);
+					//System.out.println("route 2");
+				}
+				else if(planX + planWidth < newx && planY + planWidth < newy){
+					center.setLocation(newx + 1, newy - 3);
+					//System.out.println("route 3");
+				}
+				else if(planX + planWidth > newx && planY + planWidth < newy){
+					center.setLocation(newx - 1, newy - 3);
+					//System.out.println("route 4");
+				}
 			}
-			
-			
 		} else {
 			//Quand bâteau est arrivé sur la planète.
 			isMoving = false;
