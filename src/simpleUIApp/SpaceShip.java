@@ -101,19 +101,19 @@ class SpaceShip extends Entity {
 
 				if(planX > newx && planY + planWidth > newy){
 					center.setLocation(newx - 3, newy - 2);
-					//System.out.println("route 1");
+					System.out.println("route 1");
 				}
-				else if(planX + planWidth > newx && planY + planWidth > newy){
+				else if(planX + planWidth >= newx && planY + planWidth >= newy){
 					center.setLocation(newx + 2, newy - 1);
-					//System.out.println("route 2");
+					System.out.println("route 2");
 				}
 				else if(planX + planWidth < newx && planY + planWidth < newy){
 					center.setLocation(newx + 1, newy - 3);
-					//System.out.println("route 3");
+					System.out.println("route 3");
 				}
 				else if(planX + planWidth > newx && planY + planWidth < newy){
 					center.setLocation(newx - 1, newy - 3);
-					//System.out.println("route 4");
+					System.out.println("route 4");
 				}
 			}
 		} else {
