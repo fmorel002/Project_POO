@@ -121,7 +121,7 @@ public class Run implements ApplicationRunnable<Item> {
 		});
 		
 		// On met a jour les actions de l'IA
-		Application.timer(5000, new TimerRunnable() {
+		Application.timer(4000, new TimerRunnable() {
 
 			public void run(TimerTask timerTask) {
 				Planet.updateIA();

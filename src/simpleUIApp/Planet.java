@@ -220,24 +220,27 @@ public class Planet extends Entity {
 		// 2 : On selectionne une planète aléatoire de cette liste
 		// Cette planète sera la planète attaquante
 		Random rand = new Random();
-		int planetSelected = rand.nextInt(listIaPlanets.size());
 		
-		// 3 : On selectionne une planète cible
-		// Cette planète sera la planète attaqué
-		// L'IA peut s'envoyer des troupes vers ses propres planète
-		// dans ce cas la c'est juste un ajout de troupes
-		int planetObjectiveSelected = rand.nextInt(allPlanets.size());
-		
-		// 4 : Si la planète cible est la même que la planète de départ
-		// on selectionne une autre planète
-		while(listIaPlanets.get(planetSelected) == allPlanets.get(planetObjectiveSelected))
-			planetObjectiveSelected = rand.nextInt(allPlanets.size());
+		// SI l'IA possède des planètes
+		if(listIaPlanets.size() > 0 )
+		{
+			int planetSelected = rand.nextInt(listIaPlanets.size());
 			
-		
-
-		// On envoi les vaisseaux
-		listIaPlanets.get(planetSelected).setObjective(allPlanets.get(planetObjectiveSelected));
-		listIaPlanets.get(planetSelected).generateShips(allPlanets.get(planetObjectiveSelected), "UNKNOWN");
+			// 3 : On selectionne une planète cible
+			// Cette planète sera la planète attaqué
+			// L'IA peut s'envoyer des troupes vers ses propres planète
+			// dans ce cas la c'est juste un ajout de troupes
+			int planetObjectiveSelected = rand.nextInt(allPlanets.size());
+			
+			// 4 : Si la planète cible est la même que la planète de départ
+			// on selectionne une autre planète
+			while(listIaPlanets.get(planetSelected) == allPlanets.get(planetObjectiveSelected))
+				planetObjectiveSelected = rand.nextInt(allPlanets.size());
+			
+			// On envoi les vaisseaux
+			listIaPlanets.get(planetSelected).setObjective(allPlanets.get(planetObjectiveSelected));
+			listIaPlanets.get(planetSelected).generateShips(allPlanets.get(planetObjectiveSelected), "UNKNOWN");
+		}
 	}
 		
 }
