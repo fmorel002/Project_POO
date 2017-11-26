@@ -70,6 +70,7 @@ public class Run implements ApplicationRunnable<Item> {
 
 		});
 		
+		// On met a jour les planètes et on teste la fin de partie
 		Application.timer(500, new TimerRunnable() {
 
 			public void run(TimerTask timerTask) {
@@ -108,7 +109,7 @@ public class Run implements ApplicationRunnable<Item> {
 
 		});
 		
-		
+		// on met a jour le nombre de vaisseau sur les planètes neutres
 		Application.timer(1500, new TimerRunnable() {
 
 			public void run(TimerTask timerTask) {
@@ -117,6 +118,14 @@ public class Run implements ApplicationRunnable<Item> {
 				}
 			}
 
+		});
+		
+		// On met a jour les actions de l'IA
+		Application.timer(5000, new TimerRunnable() {
+
+			public void run(TimerTask timerTask) {
+				Planet.updateIA();
+			}
 		});
 	}
 

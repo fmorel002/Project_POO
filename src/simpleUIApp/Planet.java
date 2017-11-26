@@ -67,18 +67,41 @@ public class Planet extends Entity {
 				// Si un ship arrive sur une planÃ¨te on le
 				if(this.contains(ss.getLocation()) && !ss.getMoving())
 				{
-					if (!ss.IsIaShip() && this.type == PlanetType.PLAYER)
+					// Si c'est un vaisseau du joueur
+					if(!ss.IsIaShip())
 					{
-						this.nbShip ++;
-					}
-					else if(this.type == PlanetType.IA || this.type == PlanetType.NEUTRAL){
-						this.nbShip--;
-						if(this.nbShip < 0){
-							this.type = PlanetType.PLAYER;
-							this.setColor(new Color(46, 139, 87));
-							this.nbShip = this.nbShip *(-1);
+						if (this.type == PlanetType.PLAYER)
+						{
+							this.nbShip ++;
+						}
+						else if(this.type == PlanetType.IA || this.type == PlanetType.NEUTRAL){
+							this.nbShip--;
+							if(this.nbShip < 0){
+								this.type = PlanetType.PLAYER;
+								this.setColor(new Color(46, 139, 87));
+								this.nbShip = this.nbShip *(-1);
+							}
 						}
 					}
+					// Si c'est un vaisseau de l'IA
+					else
+					{
+					
+						if (this.type == PlanetType.IA)
+						{
+							this.nbShip ++;
+						}
+						else if(this.type == PlanetType.PLAYER || this.type == PlanetType.NEUTRAL){
+							this.nbShip--;
+							if(this.nbShip < 0){
+								this.type = PlanetType.IA;
+								this.setColor(new Color(165, 42, 42));
+								this.nbShip = this.nbShip *(-1);
+							}
+						}
+					}
+					
+					
 					it.remove();
 					allItem.remove(ss);
 				}
@@ -181,6 +204,40 @@ public class Planet extends Entity {
 		if(this.type == PlanetType.NEUTRAL){
 			nbShip++;
 		}
-		
 	}
+	
+	
+	// IA
+	public static void updateIA()
+	{
+		// 1 : On recupère la liste des planètes posséder par l'IA
+		ArrayList<Planet> listIaPlanets = new ArrayList();
+		for (Planet p : allPlanets) {
+			if (p.getType() == PlanetType.IA)
+				listIaPlanets.add(p);
+		}
+		
+		// 2 : On selectionne une planète aléatoire de cette liste
+		// Cette planète sera la planète attaquante
+		Random rand = new Random();
+		int planetSelected = rand.nextInt(listIaPlanets.size());
+		
+		// 3 : On selectionne une planète cible
+		// Cette planète sera la planète attaqué
+		// L'IA peut s'envoyer des troupes vers ses propres planète
+		// dans ce cas la c'est juste un ajout de troupes
+		int planetObjectiveSelected = rand.nextInt(allPlanets.size());
+		
+		// 4 : Si la planète cible est la même que la planète de départ
+		// on selectionne une autre planète
+		while(listIaPlanets.get(planetSelected) == allPlanets.get(planetObjectiveSelected))
+			planetObjectiveSelected = rand.nextInt(allPlanets.size());
+			
+		
+
+		// On envoi les vaisseaux
+		listIaPlanets.get(planetSelected).setObjective(allPlanets.get(planetObjectiveSelected));
+		listIaPlanets.get(planetSelected).generateShips(allPlanets.get(planetObjectiveSelected), "UNKNOWN");
+	}
+		
 }
