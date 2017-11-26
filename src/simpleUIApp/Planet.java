@@ -1,7 +1,11 @@
 package simpleUIApp;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
@@ -80,13 +84,21 @@ public class Planet extends Entity {
 								this.type = PlanetType.PLAYER;
 								this.setColor(new Color(46, 139, 87));
 								this.nbShip = this.nbShip *(-1);
+								try {
+									AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("./src/files/Denis_Brogniart_Ah.wav").getCanonicalFile());
+									Clip clip = AudioSystem.getClip();
+									clip.open(audioInputStream);
+									clip.start();
+								} catch(Exception ex) {
+									System.out.println("Error with playing sound.");
+									ex.printStackTrace();
+								}
 							}
 						}
 					}
 					// Si c'est un vaisseau de l'IA
 					else
 					{
-					
 						if (this.type == PlanetType.IA)
 						{
 							this.nbShip ++;
@@ -97,6 +109,15 @@ public class Planet extends Entity {
 								this.type = PlanetType.IA;
 								this.setColor(new Color(165, 42, 42));
 								this.nbShip = this.nbShip *(-1);
+								try {
+									AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("./src/files/Denis_Brogniart_Ah.wav").getCanonicalFile());
+									Clip clip = AudioSystem.getClip();
+									clip.open(audioInputStream);
+									clip.start();
+								} catch(Exception ex) {
+									System.out.println("Error with playing sound.");
+									ex.printStackTrace();
+								}
 							}
 						}
 					}
@@ -210,30 +231,30 @@ public class Planet extends Entity {
 	// IA
 	public static void updateIA()
 	{
-		// 1 : On recupère la liste des planètes posséder par l'IA
+		// 1 : On recupï¿½re la liste des planï¿½tes possï¿½der par l'IA
 		ArrayList<Planet> listIaPlanets = new ArrayList();
 		for (Planet p : allPlanets) {
 			if (p.getType() == PlanetType.IA)
 				listIaPlanets.add(p);
 		}
 		
-		// 2 : On selectionne une planète aléatoire de cette liste
-		// Cette planète sera la planète attaquante
+		// 2 : On selectionne une planï¿½te alï¿½atoire de cette liste
+		// Cette planï¿½te sera la planï¿½te attaquante
 		Random rand = new Random();
 		
-		// SI l'IA possède des planètes
+		// SI l'IA possï¿½de des planï¿½tes
 		if(listIaPlanets.size() > 0 )
 		{
 			int planetSelected = rand.nextInt(listIaPlanets.size());
 			
-			// 3 : On selectionne une planète cible
-			// Cette planète sera la planète attaqué
-			// L'IA peut s'envoyer des troupes vers ses propres planète
+			// 3 : On selectionne une planï¿½te cible
+			// Cette planï¿½te sera la planï¿½te attaquï¿½
+			// L'IA peut s'envoyer des troupes vers ses propres planï¿½te
 			// dans ce cas la c'est juste un ajout de troupes
 			int planetObjectiveSelected = rand.nextInt(allPlanets.size());
 			
-			// 4 : Si la planète cible est la même que la planète de départ
-			// on selectionne une autre planète
+			// 4 : Si la planï¿½te cible est la mï¿½me que la planï¿½te de dï¿½part
+			// on selectionne une autre planï¿½te
 			while(listIaPlanets.get(planetSelected) == allPlanets.get(planetObjectiveSelected))
 				planetObjectiveSelected = rand.nextInt(allPlanets.size());
 			
