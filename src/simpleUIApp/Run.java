@@ -29,7 +29,7 @@ public class Run implements ApplicationRunnable<Item> {
 	}
 
 	@Override
-	public void run(final Arena<Item> arg0, Collection<? extends Item> arg1) {
+	public void run(final Arena<Item> arg0, Collection<Item> arg1) {
 		MouseListener mouseHandler = new MouseListener();
 
 		/*
@@ -41,7 +41,7 @@ public class Run implements ApplicationRunnable<Item> {
 		/*
 		 * This is our KeyHandler that will be called by the Arena in case of key events
 		 */
-		KeyListener keyListener = new KeyListener(frame);
+		KeyListener keyListener = new KeyListener(frame, this.planets);
 
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		frame.add(arg0.createComponent(this.width, this.height, mouseHandler, keyListener));
@@ -70,7 +70,7 @@ public class Run implements ApplicationRunnable<Item> {
 
 		});
 		
-		// On met a jour les planètes et on teste la fin de partie
+		// On met a jour les planï¿½tes et on teste la fin de partie
 		Application.timer(500, new TimerRunnable() {
 
 			public void run(TimerTask timerTask) {
@@ -109,7 +109,7 @@ public class Run implements ApplicationRunnable<Item> {
 
 		});
 		
-		// on met a jour le nombre de vaisseau sur les planètes neutres
+		// on met a jour le nombre de vaisseau sur les planï¿½tes neutres
 		Application.timer(1500, new TimerRunnable() {
 
 			public void run(TimerTask timerTask) {

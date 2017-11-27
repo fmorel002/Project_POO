@@ -246,5 +246,9 @@ public class Planet extends Entity {
 			listIaPlanets.get(planetSelected).generateShips(allPlanets.get(planetObjectiveSelected), "UNKNOWN");
 		}
 	}
+
+	public String toSave(){
+		return this.getLocation().getX() + ";" + this.getLocation().getY() + ";" + this.getWidth() + ";" + this.nbShip + ";" + this.speedProduction + ";" + this.type + ";\n";
+	}
 		
 }
