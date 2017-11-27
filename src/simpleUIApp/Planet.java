@@ -85,15 +85,6 @@ public class Planet extends Entity {
 								this.type = PlanetType.PLAYER;
 								this.setColor(new Color(46, 139, 87));
 								this.nbShip = this.nbShip *(-1);
-								try {
-									AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("./src/files/Denis_Brogniart_Ah.wav").getCanonicalFile());
-									Clip clip = AudioSystem.getClip();
-									clip.open(audioInputStream);
-									clip.start();
-								} catch(Exception ex) {
-									System.out.println("Error with playing sound.");
-									ex.printStackTrace();
-								}
 							}
 						}
 					}
@@ -110,15 +101,6 @@ public class Planet extends Entity {
 								this.type = PlanetType.IA;
 								this.setColor(new Color(165, 42, 42));
 								this.nbShip = this.nbShip *(-1);
-								try {
-									AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("./src/files/Denis_Brogniart_Ah.wav").getCanonicalFile());
-									Clip clip = AudioSystem.getClip();
-									clip.open(audioInputStream);
-									clip.start();
-								} catch(Exception ex) {
-									System.out.println("Error with playing sound.");
-									ex.printStackTrace();
-								}
 							}
 						}
 					}
