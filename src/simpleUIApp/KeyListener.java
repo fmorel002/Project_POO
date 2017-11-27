@@ -4,9 +4,7 @@ import javax.swing.JFrame;
 
 import fr.ubordeaux.simpleUI.KeyHandler;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -48,6 +46,44 @@ public class KeyListener implements KeyHandler {
 			case 's':
 				System.out.println("s for Saving has been typed");
 				try {
+					FileOutputStream outFile = new FileOutputStream("./src/saves/saved.map");
+					try {
+						ObjectOutputStream outStream = new ObjectOutputStream(outFile);
+						for(Planet p : gameData){
+							outStream.writeObject(p);
+						}
+						outStream.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}
+
+				try {
+					FileInputStream inFile = new FileInputStream("./src/saves/saved.map");
+					try {
+						ObjectInputStream inStream = new ObjectInputStream(inFile);
+						boolean over = false;
+						Object o;
+						while(!over){
+							try{
+								o = inStream.readObject();
+								System.out.println(o);
+							}
+							catch(Exception e){
+								over = true;
+							}
+						}
+						inStream.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}
+
+				/*try {
 					FileWriter out = new FileWriter(new File("./src/saves/saved.map"));
 					for(Planet i : gameData){
 						out.write(i.toSave());
@@ -55,7 +91,7 @@ public class KeyListener implements KeyHandler {
 					out.close();
 				} catch (IOException e) {
 					e.printStackTrace();
-				}
+				}*/
 				break;
 			default:
 				// do nothing

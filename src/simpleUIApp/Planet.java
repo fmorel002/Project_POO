@@ -6,13 +6,14 @@ import javax.sound.sampled.Clip;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
 
 import java.awt.geom.Point2D;
 
-public class Planet extends Entity {
+public class Planet extends Entity implements Serializable{
 
 	public enum PlanetType {
 		PLAYER, IA, NEUTRAL;
@@ -249,6 +250,10 @@ public class Planet extends Entity {
 
 	public String toSave(){
 		return this.getLocation().getX() + ";" + this.getLocation().getY() + ";" + this.getWidth() + ";" + this.nbShip + ";" + this.speedProduction + ";" + this.type + ";\n";
+	}
+
+	public String toString(){
+		return this.getLocation().getX() + ";" + this.getLocation().getY() + ";" + this.getWidth() + ";" + this.nbShip + ";" + this.speedProduction + ";" + this.type;
 	}
 		
 }
