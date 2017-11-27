@@ -45,7 +45,8 @@ public class Planet extends Entity {
 	public void setObjective(Item o) {
 		for (SpaceShip s : shipsAllPlanets) {
 			if (s.getBelongs() == this) {
-				s.setObjective(o);
+				if(!s.getMoving())
+					s.setObjective(o);
 			}
 		}
 	}
