@@ -84,13 +84,9 @@ public class KeyListener implements KeyHandler {
 						inStream.close();
 						ArrayList<Item> game = new ArrayList<Item>();
 						game.addAll(gameData);
-						Manager manager = new Manager();
+						/*Manager manager = new Manager();
 						Run r = new Run(800, 600, gameData);
-						/*
-						 * Call the run method of Application providing an initial item Collection, an
-						 * item manager and an ApplicationRunnable
-						 */
-						Application.run(game, manager, r);
+						Application.run(game, manager, r);*/
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
