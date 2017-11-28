@@ -59,7 +59,9 @@ public class KeyListener implements KeyHandler {
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				}
-
+				break;
+			case 'l':
+				System.out.println("l for Loading has been typed");
 				try {
 					FileInputStream inFile = new FileInputStream("./src/saves/saved.map");
 					try {
@@ -82,16 +84,7 @@ public class KeyListener implements KeyHandler {
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				}
-
-				/*try {
-					FileWriter out = new FileWriter(new File("./src/saves/saved.map"));
-					for(Planet i : gameData){
-						out.write(i.toSave());
-					}
-					out.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}*/
+				//gameData.removeAll(gameData);
 				break;
 			default:
 				// do nothing
