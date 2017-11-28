@@ -2,6 +2,7 @@ package simpleUIApp;
 
 import javax.swing.JFrame;
 
+import fr.ubordeaux.simpleUI.Application;
 import fr.ubordeaux.simpleUI.KeyHandler;
 
 import java.io.*;
@@ -62,6 +63,7 @@ public class KeyListener implements KeyHandler {
 				break;
 			case 'l':
 				System.out.println("l for Loading has been typed");
+				gameData.removeAll(gameData);
 				try {
 					FileInputStream inFile = new FileInputStream("./src/saves/saved.map");
 					try {
@@ -71,20 +73,30 @@ public class KeyListener implements KeyHandler {
 						while(!over){
 							try{
 								o = inStream.readObject();
+								Planet p = (Planet) o;
 								System.out.println(o);
+								gameData.add(p);
 							}
 							catch(Exception e){
 								over = true;
 							}
 						}
 						inStream.close();
+						ArrayList<Item> game = new ArrayList<Item>();
+						game.addAll(gameData);
+						Manager manager = new Manager();
+						Run r = new Run(800, 600, gameData);
+						/*
+						 * Call the run method of Application providing an initial item Collection, an
+						 * item manager and an ApplicationRunnable
+						 */
+						Application.run(game, manager, r);
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				}
-				//gameData.removeAll(gameData);
 				break;
 			default:
 				// do nothing
