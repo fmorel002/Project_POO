@@ -31,16 +31,6 @@ public class Main {
 				else
 					listPlanets.add(new Planet(p.getX(), p.getY(), 50, 1.0, PlanetType.NEUTRAL, allItemList,listPlanets));
 
-				// Si ce n'est pas une plan�te neutre : on ajoute des vaisseaux
-				/*if (listPlanets.get(listPlanets.size() - 1).getType() != PlanetType.NEUTRAL) {
-
-					for (int j = 0; j < 10; j++) {
-						
-						// On cr�er une liste de vaisseaux qu'on associe � la derni�re plan�te cr�er
-						spaceShipList.add(new SpaceShip(random.nextInt(win_width), random.nextInt(win_height), 10,
-								listPlanets.get(listPlanets.size() - 1)));
-					}
-				}*/
 				cptPlanete++;
 			}
 			i++;
