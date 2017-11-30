@@ -2,13 +2,12 @@ package simpleUIApp;
 
 import java.awt.Color;
 import java.awt.geom.Point2D;
+import java.io.Serializable;
 
 import simpleUIApp.Planet.PlanetType;
 
-class SpaceShip extends Entity {
+class SpaceShip extends Entity implements Serializable{
 
-	
-	
 	private Item objective;
 	private Planet belongs;
 	private boolean IA;
@@ -91,20 +90,12 @@ class SpaceShip extends Entity {
 				double planY = Planet.getPlanetFromCoord(tmp).getLocation().getY();
 				int planWidth = Planet.getPlanetFromCoord(tmp).getWidth();
 
-				/*System.out.println("Début");
-				System.out.println("plan x : " + planX);
-				System.out.println("plan y : " +planY);
-				System.out.println("plan wid : " +planWidth);
-				System.out.println("new x : " +newx);
-				System.out.println("new y : " +newy);
-				System.out.println("Fin");*/
-
 				if(planX > newx && planY + planWidth > newy){
 					center.setLocation(newx - 3, newy - 1);
 					//System.out.println("route 1 path finding");
 				}
 				else if(planX + planWidth > newx && planY + planWidth > newy){
-					center.setLocation(newx + 2, newy - 4); // - 3 possible aussi
+					center.setLocation(newx + 2, newy - 3); // - 4 possible aussi
 					//System.out.println("route 2 path finding");
 				}
 				else if(planX + planWidth < newx && planY + planWidth < newy){

@@ -16,34 +16,41 @@ public class Main {
 		ArrayList<Item> allItemList = new ArrayList<Item>();
 		ArrayList<SpaceShip> spaceShipList = new ArrayList<SpaceShip>();
 		ArrayList<Planet> listPlanets = new ArrayList<Planet>();
+		
+		// On associe � la plan�te sa liste de vaisseaux
+		Planet.setShipsAllPlanets(spaceShipList);
+		// On initialise le temps de création pour les vaisseaux de base sur les planètes.
+		// et une width aléatoire pour toutes les planètes
+		Planet.setPlanetProduction();
+		Planet.setPlanetProductionNeutral();
+		Planet.setWidth();
 
 		// On initialise x planets
 		int i = 0;
 		int cptPlanete = 0;
 		while (i < 8) {
-			Point2D p = Planet.findPlanetPosition(win_width, win_height, listPlanets, 50);
+			Point2D p = Planet.findPlanetPosition(win_width, win_height, listPlanets, Planet.getPlanetWidth());
 
 			if (p.getX() != -1) {
 				if (cptPlanete == 0)
-					listPlanets.add(new Planet(p.getX(), p.getY(), 50, 1.0, PlanetType.PLAYER, allItemList,listPlanets));
+					listPlanets.add(new Planet(p.getX(), p.getY(), PlanetType.PLAYER, allItemList,listPlanets));
 				else if (cptPlanete == 1)
-					listPlanets.add(new Planet(p.getX(), p.getY(), 50, 1.0, PlanetType.IA, allItemList,listPlanets));
+					listPlanets.add(new Planet(p.getX(), p.getY(), PlanetType.IA, allItemList,listPlanets));
 				else
-					listPlanets.add(new Planet(p.getX(), p.getY(), 50, 1.0, PlanetType.NEUTRAL, allItemList,listPlanets));
+					listPlanets.add(new Planet(p.getX(), p.getY(), PlanetType.NEUTRAL, allItemList,listPlanets));
 
 				cptPlanete++;
 			}
 			i++;
 		}
 
-		// On associe � la plan�te sa liste de vaisseaux
-		Planet.setShipsAllPlanets(spaceShipList);
-		
 		allItemList.addAll(listPlanets);
 		allItemList.addAll(spaceShipList);
 
 		Manager manager = new Manager();
-		Run r = new Run(win_width, win_height,listPlanets);
+		
+		//On passe en paramètre listPlanets à Run pour faire les updates (augmenter nombre vaisseaux, vérifier si win ou pas)
+		Run r = new Run(win_width, win_height, listPlanets, allItemList, spaceShipList);
 
 		/*
 		 * Call the run method of Application providing an initial item Collection, an

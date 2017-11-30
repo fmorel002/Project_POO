@@ -1,5 +1,11 @@
 package simpleUIApp;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -19,13 +25,16 @@ public class Run implements ApplicationRunnable<Item> {
 	private int height;
 	private boolean isGO;
 	private boolean isWon;
-	ArrayList<Planet> planets;
+	static ArrayList<Planet> planets;
+	static ArrayList<Item> allItem;
+	static ArrayList<SpaceShip> spaceShipsList;
 
-	public Run(int width, int height, ArrayList<Planet> al) {
+	public Run(int width, int height, ArrayList<Planet> al, ArrayList<Item> all, ArrayList<SpaceShip> sp) {
 		this.width = width;
 		this.height = height;
-		this.planets = al;
-		
+		planets = al;
+		allItem = all;
+		spaceShipsList = sp;
 	}
 
 	@Override
@@ -41,7 +50,7 @@ public class Run implements ApplicationRunnable<Item> {
 		/*
 		 * This is our KeyHandler that will be called by the Arena in case of key events
 		 */
-		KeyListener keyListener = new KeyListener(frame, this.planets);
+		KeyListener keyListener = new KeyListener(frame);
 
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		frame.add(arg0.createComponent(this.width, this.height, mouseHandler, keyListener));
@@ -60,18 +69,24 @@ public class Run implements ApplicationRunnable<Item> {
 		 * method just refresh the component.
 		 */
 		Application.timer(10, new TimerRunnable() {
-
 			public void run(TimerTask timerTask) {
 				arg0.refresh();
-				for (Item item : arg1) {
+				for (Item item : arg1){
 					item.move();
 				}
 			}
-
 		});
 		
+		Application.timer(10, new TimerRunnable() {
+			public void run(TimerTask timerTask) {
+				for (Planet p : planets){
+					p.shipsArrived();
+				}
+			}
+		});	
+		
 		// On met a jour les plan�tes et on teste la fin de partie
-		Application.timer(500, new TimerRunnable() {
+		Application.timer(Planet.getSpeedProduction(), new TimerRunnable() {
 
 			public void run(TimerTask timerTask) {
 				int cptIAP = 0, cptPP = 0;
@@ -81,8 +96,6 @@ public class Run implements ApplicationRunnable<Item> {
 					// Si la partie n'est pas terminé
 					if(!isGO)
 					{
-						
-						
 						if(p.getType() == PlanetType.IA)
 							cptIAP++;
 						else if(p.getType() == PlanetType.PLAYER)
@@ -90,7 +103,6 @@ public class Run implements ApplicationRunnable<Item> {
 						
 					}
 				}
-				
 				if((cptIAP == 0 || cptPP == 0) && isGO == false){
 					isGO = true;
 					
@@ -103,15 +115,13 @@ public class Run implements ApplicationRunnable<Item> {
 						isWon = true;
 						System.out.println("** YOU WIN !  **");
 					}
-						
 				}
 			}
 
 		});
 		
 		// on met a jour le nombre de vaisseau sur les plan�tes neutres
-		Application.timer(1500, new TimerRunnable() {
-
+		Application.timer(Planet.getSpeedProductionNeutral(), new TimerRunnable() {
 			public void run(TimerTask timerTask) {
 				for (Planet p : planets) {
 					p.updateNeutral();
@@ -122,11 +132,64 @@ public class Run implements ApplicationRunnable<Item> {
 		
 		// On met a jour les actions de l'IA
 		Application.timer(3000, new TimerRunnable() {
-
 			public void run(TimerTask timerTask) {
 				Planet.updateIA();
 			}
 		});
+	}
+	
+	public static void saveGame(){
+		try {
+			FileOutputStream outFile = new FileOutputStream("./src/saves/saved.map");
+			try {
+				ObjectOutputStream outStream = new ObjectOutputStream(outFile);
+				for(Item p : allItem){
+					outStream.writeObject(p);
+				}
+				outStream.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void loadGame(){
+		planets.clear();
+		allItem.clear();
+		spaceShipsList.clear();
+		try {
+			FileInputStream inFile = new FileInputStream("./src/saves/saved.map");
+			try {
+				ObjectInputStream inStream = new ObjectInputStream(inFile);
+				boolean over = false;
+				Object o;
+				while(!over){
+					try{
+						o = inStream.readObject();
+						Item i = (Item) o;
+						allItem.add(i);
+						if(i instanceof Planet){
+							Planet p = (Planet) i;
+							planets.add(p);
+						}
+						if(i instanceof SpaceShip){
+							SpaceShip s = (SpaceShip) i;
+							spaceShipsList.add(s);
+						}
+					}
+					catch(Exception e){
+						over = true;
+					}
+				}
+				inStream.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

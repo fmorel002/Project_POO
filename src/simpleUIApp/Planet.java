@@ -1,11 +1,7 @@
 package simpleUIApp;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -22,14 +18,26 @@ public class Planet extends Entity implements Serializable{
 	private static ArrayList<SpaceShip> shipsAllPlanets;
 	private static ArrayList<Item> allItem;
 	private static ArrayList<Planet> allPlanets;
-	private double speedProduction;
+	
+	private final static int speedProductionMax = 1000;
+	private final static int speedProductionMin = 300;
+	private static int speedProduction;
+	
+	private final static int speedProductionNeutralMax = 2000;
+	private final static int speedProductionNeutralMin = 1500;
+	private static int speedProductionNeutral;
+	
+	private final static int widthMax = 70;
+	private final static int widthMin = 40;
+	private static int width;
+	
 	private PlanetType type;
 	private int nbShip = 0;
 
-	public Planet(double x, double y, int w, double sP, PlanetType type, ArrayList<Item> it,
+	public Planet(double x, double y, PlanetType type, ArrayList<Item> it,
 				  ArrayList<Planet> planets) {
 
-		super(x, y, w, new Color(119, 136, 153));
+		super(x, y, width, new Color(119, 136, 153));
 		this.type = type;
 		if (type == PlanetType.PLAYER)
 			this.setColor(new Color(46, 139, 87));
@@ -37,10 +45,18 @@ public class Planet extends Entity implements Serializable{
 			this.setColor(new Color(165, 42, 42));
 
 
-		this.speedProduction = sP;
 		allItem = it;
 		allPlanets = planets;
 
+	}
+	
+	public static void setWidth(){
+		Random r = new Random();
+		width = r.nextInt(widthMax - widthMin) + widthMin;
+	}
+	
+	public static int getPlanetWidth(){
+		return width;
 	}
 
 	public void setObjective(Item o) {
@@ -51,6 +67,24 @@ public class Planet extends Entity implements Serializable{
 			}
 		}
 	}
+	
+	public static void setPlanetProduction(){
+		Random r = new Random();
+		speedProduction = r.nextInt(speedProductionMax - speedProductionMin) + speedProductionMin;
+	}
+	
+	public static int getSpeedProduction(){
+		return speedProduction;
+	}
+	
+	public static void setPlanetProductionNeutral(){
+		Random r = new Random();
+		speedProductionNeutral  = r.nextInt(speedProductionNeutralMax - speedProductionNeutralMin) + speedProductionNeutralMin;
+	}
+	
+	public static int getSpeedProductionNeutral(){
+		return speedProductionNeutral;
+	}
 
 	public static void setShipsAllPlanets(ArrayList<SpaceShip> ships) {
 		shipsAllPlanets = ships;
@@ -59,10 +93,8 @@ public class Planet extends Entity implements Serializable{
 	public PlanetType getType() {
 		return this.type;
 	}
-
-	public void update() {
-		if (this.getType() != PlanetType.NEUTRAL)
-			nbShip++;
+	
+	public void shipsArrived(){
 		
 		Iterator<SpaceShip> it = shipsAllPlanets.iterator();
 		
@@ -105,13 +137,16 @@ public class Planet extends Entity implements Serializable{
 							}
 						}
 					}
-					
-					
 					it.remove();
 					allItem.remove(ss);
 				}
 			}
 		}
+	}
+
+	public void update() {
+		if (this.getType() != PlanetType.NEUTRAL)
+			nbShip++;
 	}
 
 	public void generateShips(Item it, String key) {
@@ -249,11 +284,11 @@ public class Planet extends Entity implements Serializable{
 	}
 
 	public String toSave(){
-		return this.getLocation().getX() + ";" + this.getLocation().getY() + ";" + this.getWidth() + ";" + this.nbShip + ";" + this.speedProduction + ";" + this.type + ";\n";
+		return this.getLocation().getX() + ";" + this.getLocation().getY() + ";" + this.getWidth() + ";" + this.nbShip + ";" + this.type + ";\n";
 	}
 
 	public String toString(){
-		return this.getLocation().getX() + ";" + this.getLocation().getY() + ";" + this.getWidth() + ";" + this.nbShip + ";" + this.speedProduction + ";" + this.type;
+		return this.getLocation().getX() + ";" + this.getLocation().getY() + ";" + this.getWidth() + ";" + this.nbShip + ";" + this.type;
 	}
 		
 }
