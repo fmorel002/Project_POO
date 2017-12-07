@@ -29,12 +29,12 @@ public class Planet extends Entity implements Serializable{
 	
 	private final static int widthMax = 70;
 	private final static int widthMin = 40;
-	private static int width;
+	private int width;
 	
 	private PlanetType type;
 	private int nbShip = 0;
 
-	public Planet(double x, double y, PlanetType type, ArrayList<Item> it,
+	public Planet(double x, double y, int width, PlanetType type, ArrayList<Item> it,
 				  ArrayList<Planet> planets) {
 
 		super(x, y, width, new Color(119, 136, 153));
@@ -50,12 +50,12 @@ public class Planet extends Entity implements Serializable{
 
 	}
 	
-	public static void setWidth(){
+	public static int generatePlanetWidth(){
 		Random r = new Random();
-		width = r.nextInt(widthMax - widthMin) + widthMin;
+		return r.nextInt(widthMax - widthMin) + widthMin;
 	}
 	
-	public static int getPlanetWidth(){
+	public int getPlanetWidth(){
 		return width;
 	}
 

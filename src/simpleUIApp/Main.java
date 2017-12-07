@@ -23,21 +23,21 @@ public class Main {
 		// et une width aléatoire pour toutes les planètes
 		Planet.setPlanetProduction();
 		Planet.setPlanetProductionNeutral();
-		Planet.setWidth();
 
 		// On initialise x planets
 		int i = 0;
 		int cptPlanete = 0;
 		while (i < 8) {
-			Point2D p = Planet.findPlanetPosition(win_width, win_height, listPlanets, Planet.getPlanetWidth());
+			int planetSize = Planet.generatePlanetWidth();
+			Point2D p = Planet.findPlanetPosition(win_width, win_height, listPlanets,planetSize);
 
 			if (p.getX() != -1) {
 				if (cptPlanete == 0)
-					listPlanets.add(new Planet(p.getX(), p.getY(), PlanetType.PLAYER, allItemList,listPlanets));
+					listPlanets.add(new Planet(p.getX(), p.getY(), planetSize, PlanetType.PLAYER, allItemList,listPlanets));
 				else if (cptPlanete == 1)
-					listPlanets.add(new Planet(p.getX(), p.getY(), PlanetType.IA, allItemList,listPlanets));
+					listPlanets.add(new Planet(p.getX(), p.getY(),planetSize, PlanetType.IA, allItemList,listPlanets));
 				else
-					listPlanets.add(new Planet(p.getX(), p.getY(), PlanetType.NEUTRAL, allItemList,listPlanets));
+					listPlanets.add(new Planet(p.getX(), p.getY(),planetSize, PlanetType.NEUTRAL, allItemList,listPlanets));
 
 				cptPlanete++;
 			}
