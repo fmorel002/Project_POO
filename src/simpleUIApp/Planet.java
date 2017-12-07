@@ -29,7 +29,6 @@ public class Planet extends Entity implements Serializable{
 	
 	private final static int widthMax = 70;
 	private final static int widthMin = 40;
-	private int width;
 	
 	private PlanetType type;
 	private int nbShip = 0;
@@ -55,9 +54,7 @@ public class Planet extends Entity implements Serializable{
 		return r.nextInt(widthMax - widthMin) + widthMin;
 	}
 	
-	public int getPlanetWidth(){
-		return width;
-	}
+
 
 	public void setObjective(Item o) {
 		for (SpaceShip s : shipsAllPlanets) {
@@ -160,7 +157,17 @@ public class Planet extends Entity implements Serializable{
 		
 		int shipsToSend = nbShip/percentToSend;
 		for (int i = 0; i < shipsToSend; i++) {
-				SpaceShip ss = new SpaceShip(this.center.getX() + 25, this.center.getY() + 25, 10, this);
+			
+				double xcircle = (double)this.center.getX() + ((double)(this.getWidth()+10)/2) * Math.cos(Math.toRadians((360/shipsToSend) *i));
+				double ycircle = (double)this.center.getY() + ((double)(this.getWidth()+10)/2) * Math.sin(Math.toRadians((360/shipsToSend) *i));
+				
+				double cosx = ((double)this.getWidth()/2) * Math.cos(Math.toRadians(10*i));
+				double cosy = ((double)this.getWidth()/2) * Math.sin(Math.toRadians(10*i));
+				
+				System.out.println("Pos : "+ cosx + " " + cosy);
+				SpaceShip ss = new SpaceShip(xcircle, ycircle , 10, this);
+				
+				
 				ss.setObjective(it);
 				shipsAllPlanets.add(ss);
 				allItem.add(ss);

@@ -49,7 +49,7 @@ public class Main {
 
 		Manager manager = new Manager();
 		
-		//On passe en paramètre listPlanets à Run pour faire les updates (augmenter nombre vaisseaux, vérifier si win ou pas)
+		//On passe en param�tre listPlanets à Run pour faire les updates (augmenter nombre vaisseaux, vérifier si win ou pas)
 		Run r = new Run(win_width, win_height, listPlanets, allItemList, spaceShipList);
 
 		/*
