@@ -137,7 +137,10 @@ public class Run implements ApplicationRunnable<Item> {
 			}
 		});
 	}
-	
+
+	/**
+	 * @brief Créer un fichier de sauvegarde dans /saves dans le dossier du projet. On écrit dedans toutes les instances des classes sérializable contenu dans la liste allItem.
+	 */
 	public static void saveGame(){
 		try {
 			FileOutputStream outFile = new FileOutputStream("./src/saves/saved.map");
@@ -147,6 +150,7 @@ public class Run implements ApplicationRunnable<Item> {
 					outStream.writeObject(p);
 				}
 				outStream.close();
+				outFile.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -154,7 +158,10 @@ public class Run implements ApplicationRunnable<Item> {
 			e.printStackTrace();
 		}
 	}
-	
+
+	/**
+	 * @biref Permet de recharger la partie contenue dans /saves. On vide toutes les listes avant de les remplir avec les instances de classes contenues dans le fichier.
+	 */
 	public static void loadGame(){
 		planets.clear();
 		allItem.clear();
@@ -184,6 +191,7 @@ public class Run implements ApplicationRunnable<Item> {
 					}
 				}
 				inStream.close();
+				inFile.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
