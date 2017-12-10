@@ -48,5 +48,4 @@ public class Entity extends Item implements Serializable{
 		double dy = p1.getY() - p2.getY();
 		return dx * dx + dy * dy;
 	}
-
 }
