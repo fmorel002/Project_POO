@@ -20,25 +20,34 @@ public class Planet extends Entity implements Serializable{
 		PLAYER, IA, NEUTRAL;
 	}
 
-	private static ArrayList<SpaceShip> shipsAllPlanets;
-	private static ArrayList<Item> allItem;
-	private static ArrayList<Planet> allPlanets;
+	private static ArrayList<SpaceShip> shipsAllPlanets; // Liste des Vaisseaux
+	private static ArrayList<Planet> allPlanets; // Liste des planètes
+	private static ArrayList<Item> allItem; // Liste de tous les éléments du jeu
 	
+	// Variables gérant la production de vaisseaux des planètes joueurs ( change à chaque partie)
 	private final static int speedProductionMax = 1000;
 	private final static int speedProductionMin = 300;
 	private static int speedProduction;
 	
+	// Variables gérant la production de vaisseaux des planètes neutres ( change à chaque partie)
 	private final static int speedProductionNeutralMax = 2000;
 	private final static int speedProductionNeutralMin = 1500;
 	private static int speedProductionNeutral;
 	
+	// Taille min/max des palnètes
 	private final static int widthMax = 70;
 	private final static int widthMin = 40;
 
+	// Nombre de vaisseaux max par escadrons
 	private final static int shipsByWaves = 15;
 	
+	// Type de planète (NEUTRAL/IA/PLAYER)
 	private PlanetType type;
+	
+	// Nombre de vaisseaux sur la planète
 	private int nbShip = 0;
+	
+	// Nombre de wave de vaisseaux à envoyer
 	private int cptWaves = 0;
 
 	public Planet(double x, double y, int width, PlanetType type, ArrayList<Item> it,
@@ -57,22 +66,19 @@ public class Planet extends Entity implements Serializable{
 
 	}
 	
+	/**
+	 * @brief Genere une taille de planète aléatoire compris entre widthMax et widthMin
+	 * @return la taille générée
+	 */
 	public static int generatePlanetWidth(){
 		Random r = new Random();
 		return r.nextInt(widthMax - widthMin) + widthMin;
 	}
 	
-
-
-	public void setObjective(Item o) {
-		for (SpaceShip s : shipsAllPlanets) {
-			if (s.getBelongs() == this) {
-				if(!s.getMoving())
-					s.setObjective(o);
-			}
-		}
-	}
-	
+	/**
+	 * @brief Genere une vitesse de production de vaisseaux aléatoirement pour une planète JOUEUR compris entre speedProductionMax et speedProductionMin
+	 * @return la vitesse de production générée
+	 */
 	public static void setPlanetProduction(){
 		Random r = new Random();
 		speedProduction = r.nextInt(speedProductionMax - speedProductionMin) + speedProductionMin;
@@ -82,6 +88,10 @@ public class Planet extends Entity implements Serializable{
 		return speedProduction;
 	}
 	
+	/**
+	 * @brief Genere une vitesse de production de vaisseaux aléatoirement pour une planète NEUTRE compris entre speedProductionNeutralMin et speedProductionNeutralMin
+	 * @return la vitesse de production générée
+	 */
 	public static void setPlanetProductionNeutral(){
 		Random r = new Random();
 		speedProductionNeutral  = r.nextInt(speedProductionNeutralMax - speedProductionNeutralMin) + speedProductionNeutralMin;
@@ -99,6 +109,9 @@ public class Planet extends Entity implements Serializable{
 		return this.type;
 	}
 	
+	/**
+	 * @brief Met à jour la planète en fonction des entrées des vaissaux (Changement de propriétaire, MAJ du nombre de vaisseaux)
+	 */
 	public void shipsArrived(){
 		
 		Iterator<SpaceShip> it = shipsAllPlanets.iterator();
@@ -107,7 +120,7 @@ public class Planet extends Entity implements Serializable{
 			SpaceShip ss = it.next();
 				if (ss.getBelongs() == this) { 
 								
-				// Si un ship arrive sur une planÃ¨te on le
+				// Si un ship arrive sur une planète on le
 				if(this.contains(ss.getLocation()) && !ss.getMoving())
 				{
 					// Si c'est un vaisseau du joueur
@@ -149,15 +162,28 @@ public class Planet extends Entity implements Serializable{
 		}
 	}
 
+	/*
+	 * @brief Appelé par un timer cette fonction incrémente de 1 le nombre de vaisseau sur la planète
+	 */
 	public void update() {
 		if (this.getType() != PlanetType.NEUTRAL)
 			nbShip++;
 	}
 
+	/*
+	 * @brief Envoie des vagues de vaisseaux depuis la planète d'origine d'un montant de vaissaux égale à shipsByWaves
+	 * @param it : Liste d'item
+	 * @param waves : nombre de wave à envoyer 
+	 */
 	public boolean sendWave(Item it, int waves){
+		
+		// On créer une liste temporaire des vaisseaux à ajouter
 		ArrayList<SpaceShip> tmp = new ArrayList<SpaceShip>();
-		System.out.println("In loop sendWave cptWaves : " + this.cptWaves + " waves : " + waves);
+
+		// On génère un identifiant unique pour l'esacdron
 		int waveID = (int)(Math.random() * 100001);
+		
+		// Pour chaque vague on attrivue une position unique par vaisseaux
 		for (int i = 0; i < shipsByWaves; i++) {
 			double xCircle = (double)this.center.getX() + ((double)(this.getWidth()+10)/2) * Math.cos(Math.toRadians((360/shipsByWaves) * i));
 			double yCircle = (double)this.center.getY() + ((double)(this.getWidth()+10)/2) * Math.sin(Math.toRadians((360/shipsByWaves) * i));
@@ -165,15 +191,23 @@ public class Planet extends Entity implements Serializable{
 			double cosX = ((double)this.getWidth()/2) * Math.cos(Math.toRadians(10*i));
 			double cosY = ((double)this.getWidth()/2) * Math.sin(Math.toRadians(10*i));
 
-			System.out.println("Pos : "+ cosX + " " + cosY);
+			// On généère le vaisseau
 			SpaceShip ss = new SpaceShip(xCircle, yCircle , 10, this);
 
+			// On lui donne son objectif
 			ss.setObjective(it);
+			
+			// On défini son escadron
 			ss.setEscadronID(waveID);
+			
+			// On ajoute dans la liste des vaisseaux le nouveau
 			shipsAllPlanets.add(ss);
+			
+			// idem dans la liste temporaire
 			tmp.add(ss);	
 		}
 		
+		// On ajoute une seule fois la liste temporaire dans allItem pour limiter la concurence
 		allItem.addAll(tmp);
 		
 		this.cptWaves++;
@@ -186,7 +220,14 @@ public class Planet extends Entity implements Serializable{
 		}
 	}
 
+	/*
+	 * @brief Envoie des vaisseaux en fonction des paramètre envoyer par l'utilisateur via le clavier
+	 * @param it : Liste d'item
+	 * @param key : touche du clavier
+	 */
 	public void generateShips(Item it, String key) {
+		
+		// On définie la proportion de vaissaux à envoyer
 		int percentToSend = 0;
 		if(key == "UNKNOWN")
 			percentToSend = 2;
@@ -202,6 +243,7 @@ public class Planet extends Entity implements Serializable{
 			Lock l = new ReentrantLock();
 			l.lock();
 			try {
+				// Toute les 1 seconde on apelle sendwave pour envoyer la vague suivante
 				final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 				executorService.scheduleAtFixedRate(new Runnable() {
 					@Override
@@ -218,18 +260,18 @@ public class Planet extends Entity implements Serializable{
 			}
 		}
 		
-		
+		// On génère un ID pour l'esacdron
 		int waveID = (int)(Math.random() * 100001);
+		
+		
 		// Envoie les nombres de vaisseaux si < shipsByWaves.
 		for (int j = 0; j < shipsLeft; j++) {
-			System.out.println("In shipsLeft " + shipsLeft);
 			double xcircle = (double)this.center.getX() + ((double)(this.getWidth()+10)/2) * Math.cos(Math.toRadians((360/shipsLeft) * j));
 			double ycircle = (double)this.center.getY() + ((double)(this.getWidth()+10)/2) * Math.sin(Math.toRadians((360/shipsLeft) * j));
 
 			double cosx = ((double)this.getWidth()/2) * Math.cos(Math.toRadians(10*j));
 			double cosy = ((double)this.getWidth()/2) * Math.sin(Math.toRadians(10*j));
 
-			System.out.println("Pos : "+ cosx + " " + cosy);
 			SpaceShip ss = new SpaceShip(xcircle, ycircle , 10, this);
 
 			ss.setEscadronID(waveID);
@@ -237,10 +279,10 @@ public class Planet extends Entity implements Serializable{
 			shipsAllPlanets.add(ss);
 			allItem.add(ss);
 		}
-		System.out.println("Sent :  " + shipsToSend +" ships");
 		nbShip = nbShip - shipsToSend;
 	}
-
+	
+	
 	/**
 	 * @brief Return the planet at a specific coordinate, null if not.
 	 * 
@@ -312,40 +354,44 @@ public class Planet extends Entity implements Serializable{
 
 	}
 
+	/*
+	 * @brief Incrémente le nombre de vaisseau des planètes neutres
+	 */
 	public void updateNeutral() {
 		if(this.type == PlanetType.NEUTRAL){
 			nbShip++;
 		}
 	}
 	
-	
-	// IA
+	/*
+	 * @brief Intelligence Articificiel du personnage non joueur
+	 */
 	public static void updateIA()
 	{
-		// 1 : On recupï¿½re la liste des planï¿½tes possï¿½der par l'IA
+		// 1 : On récupère la liste des planètes posséder par l'IA
 		ArrayList<Planet> listIaPlanets = new ArrayList();
 		for (Planet p : allPlanets) {
 			if (p.getType() == PlanetType.IA)
 				listIaPlanets.add(p);
 		}
 		
-		// 2 : On selectionne une planï¿½te alï¿½atoire de cette liste
-		// Cette planï¿½te sera la planï¿½te attaquante
+		// 2 : On selectionne une planète aléatoire de cette liste
+		// Cette planète sera la planète attaquante
 		Random rand = new Random();
 		
-		// SI l'IA possï¿½de des planï¿½tes
+		// SI l'IA possède des planètes
 		if(listIaPlanets.size() > 0 )
 		{
 			int planetSelected = rand.nextInt(listIaPlanets.size());
 			
-			// 3 : On selectionne une planï¿½te cible
-			// Cette planï¿½te sera la planï¿½te attaquï¿½
-			// L'IA peut s'envoyer des troupes vers ses propres planï¿½te
+			// 3 : On selectionne une planète cible
+			// Cette planète sera la planète attaqué
+			// L'IA peut s'envoyer des troupes vers ses propres planète
 			// dans ce cas la c'est juste un ajout de troupes
 			int planetObjectiveSelected = rand.nextInt(allPlanets.size());
 			
-			// 4 : Si la planï¿½te cible est la mï¿½me que la planï¿½te de dï¿½part
-			// on selectionne une autre planï¿½te
+			// 4 : Si la planète cible est la même que la planète de départ
+			// on selectionne une autre planète
 			while(listIaPlanets.get(planetSelected) == allPlanets.get(planetObjectiveSelected))
 				planetObjectiveSelected = rand.nextInt(allPlanets.size());
 			
@@ -355,15 +401,11 @@ public class Planet extends Entity implements Serializable{
 		}
 	}
 
-	public String toSave(){
-		return this.getLocation().getX() + ";" + this.getLocation().getY() + ";" + this.getWidth() + ";" + this.nbShip + ";" + this.type + ";\n";
-	}
-
-	public String toString(){
-		return this.getLocation().getX() + ";" + this.getLocation().getY() + ";" + this.getWidth() + ";" + this.nbShip + ";" + this.type;
-	}
-
-	
+	/*
+	 * @brief Met à jour l'objectif de tous les vaisseau posséder l'ID de l'escadron passé en paramètre
+	 * @param objective : nouvelle objectif
+	 * @param escadronID : ID de l'escadron à comparer
+	 */
 	public static void updateEscadronsObjective(Item objective, int escadronID) {
 		for (SpaceShip s : shipsAllPlanets) {
 			if (s.getEscadronID() == escadronID && escadronID != -1 )
