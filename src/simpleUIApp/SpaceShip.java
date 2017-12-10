@@ -12,10 +12,12 @@ class SpaceShip extends Entity implements Serializable{
 	private Planet belongs;
 	private boolean IA;
 	private boolean isMoving;
+	private int escadronID;
 	
 	public SpaceShip(double x, double y, int w, Planet p) {
 		super(x, y, w, new Color(119,136,153));
 		isMoving = false;
+		this.escadronID = -1;
 		
 		if(p.getType() == PlanetType.PLAYER)
 		{
@@ -114,4 +116,14 @@ class SpaceShip extends Entity implements Serializable{
 			this.belongs = Planet.getPlanetFromCoord(this.getLocation());
 		}
 	}
+
+	public void setEscadronID(int waveID) {
+		this.escadronID = waveID;
+	}
+	
+	public int getEscadronID()
+	{
+		return this.escadronID;
+	}
+
 }

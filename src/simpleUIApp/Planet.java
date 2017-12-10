@@ -11,6 +11,8 @@ import java.awt.geom.Point2D;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Planet extends Entity implements Serializable{
 
@@ -153,7 +155,9 @@ public class Planet extends Entity implements Serializable{
 	}
 
 	public boolean sendWave(Item it, int waves){
+		ArrayList<SpaceShip> tmp = new ArrayList<SpaceShip>();
 		System.out.println("In loop sendWave cptWaves : " + this.cptWaves + " waves : " + waves);
+		int waveID = (int)(Math.random() * 100001);
 		for (int i = 0; i < shipsByWaves; i++) {
 			double xCircle = (double)this.center.getX() + ((double)(this.getWidth()+10)/2) * Math.cos(Math.toRadians((360/shipsByWaves) * i));
 			double yCircle = (double)this.center.getY() + ((double)(this.getWidth()+10)/2) * Math.sin(Math.toRadians((360/shipsByWaves) * i));
@@ -165,9 +169,13 @@ public class Planet extends Entity implements Serializable{
 			SpaceShip ss = new SpaceShip(xCircle, yCircle , 10, this);
 
 			ss.setObjective(it);
+			ss.setEscadronID(waveID);
 			shipsAllPlanets.add(ss);
-			allItem.add(ss);
+			tmp.add(ss);	
 		}
+		
+		allItem.addAll(tmp);
+		
 		this.cptWaves++;
 		if(this.cptWaves == waves){
 			this.cptWaves = 0;
@@ -191,19 +199,27 @@ public class Planet extends Entity implements Serializable{
 		int nbWaves = shipsToSend / shipsByWaves;
 		int shipsLeft = shipsToSend % shipsByWaves;
 		if(nbWaves > 0){
-			final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-			executorService.scheduleAtFixedRate(new Runnable() {
-				@Override
-				public void run() {
-					boolean allSent = false;
-					allSent = sendWave(it, nbWaves);
-					if(allSent == true){
-						executorService.shutdown();
+			Lock l = new ReentrantLock();
+			l.lock();
+			try {
+				final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+				executorService.scheduleAtFixedRate(new Runnable() {
+					@Override
+					public void run() {
+						boolean allSent = false;
+						allSent = sendWave(it, nbWaves);
+						if(allSent == true){
+							executorService.shutdown();
+						}
 					}
-				}
-			}, 1, 1, TimeUnit.SECONDS);
+				}, 1, 1, TimeUnit.SECONDS);
+			} finally {
+				l.unlock();
+			}
 		}
-
+		
+		
+		int waveID = (int)(Math.random() * 100001);
 		// Envoie les nombres de vaisseaux si < shipsByWaves.
 		for (int j = 0; j < shipsLeft; j++) {
 			System.out.println("In shipsLeft " + shipsLeft);
@@ -216,6 +232,7 @@ public class Planet extends Entity implements Serializable{
 			System.out.println("Pos : "+ cosx + " " + cosy);
 			SpaceShip ss = new SpaceShip(xcircle, ycircle , 10, this);
 
+			ss.setEscadronID(waveID);
 			ss.setObjective(it);
 			shipsAllPlanets.add(ss);
 			allItem.add(ss);
@@ -344,6 +361,15 @@ public class Planet extends Entity implements Serializable{
 
 	public String toString(){
 		return this.getLocation().getX() + ";" + this.getLocation().getY() + ";" + this.getWidth() + ";" + this.nbShip + ";" + this.type;
+	}
+
+	
+	public static void updateEscadronsObjective(Item objective, int escadronID) {
+		for (SpaceShip s : shipsAllPlanets) {
+			if (s.getEscadronID() == escadronID && escadronID != -1 )
+				s.setObjective(objective);
+		}
+		
 	}
 		
 }

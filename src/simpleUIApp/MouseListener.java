@@ -38,15 +38,25 @@ public class MouseListener implements MouseHandler<Item> {
 	@Override
 	public void mouseDrop(List<Item> arg0, KeyPress arg1) {
 		System.out.println("Drag& Drop :" + dragList + " => " + arg0 + " using " + arg1.toString());
-		if(!arg0.isEmpty()){
+		if (!arg0.isEmpty()) {
 			for (Item item : dragList) {
-				if(item instanceof Planet && ((Planet) item).getType() == PlanetType.PLAYER)
+				if (item instanceof Planet && ((Planet) item).getType() == PlanetType.PLAYER) 
 				{
 					Planet p = (Planet) item;
 					p.setObjective(arg0.get(0));
 					p.generateShips(arg0.get(0), arg1.toString());
-				}
 					
+				} else if (item instanceof SpaceShip && !((SpaceShip) item).IsIaShip()) {
+					SpaceShip s = (SpaceShip) item;
+
+					if (arg0.get(0) instanceof Planet) {
+						Planet p = (Planet) arg0.get(0);
+						s.setObjective(p);
+						Planet.updateEscadronsObjective(s.getObjective(),s.getEscadronID());
+					}
+
+				}
+
 			}
 		}
 	}
