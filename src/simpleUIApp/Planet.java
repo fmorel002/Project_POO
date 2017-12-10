@@ -8,6 +8,9 @@ import java.util.Iterator;
 import java.util.Random;
 
 import java.awt.geom.Point2D;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class Planet extends Entity implements Serializable{
 
@@ -29,9 +32,12 @@ public class Planet extends Entity implements Serializable{
 	
 	private final static int widthMax = 70;
 	private final static int widthMin = 40;
+
+	private final static int shipsByWaves = 15;
 	
 	private PlanetType type;
 	private int nbShip = 0;
+	private int cptWaves = 0;
 
 	public Planet(double x, double y, int width, PlanetType type, ArrayList<Item> it,
 				  ArrayList<Planet> planets) {
@@ -146,6 +152,32 @@ public class Planet extends Entity implements Serializable{
 			nbShip++;
 	}
 
+	public boolean sendWave(Item it, int waves){
+		System.out.println("In loop sendWave cptWaves : " + this.cptWaves + " waves : " + waves);
+		for (int i = 0; i < shipsByWaves; i++) {
+			double xCircle = (double)this.center.getX() + ((double)(this.getWidth()+10)/2) * Math.cos(Math.toRadians((360/shipsByWaves) * i));
+			double yCircle = (double)this.center.getY() + ((double)(this.getWidth()+10)/2) * Math.sin(Math.toRadians((360/shipsByWaves) * i));
+
+			double cosX = ((double)this.getWidth()/2) * Math.cos(Math.toRadians(10*i));
+			double cosY = ((double)this.getWidth()/2) * Math.sin(Math.toRadians(10*i));
+
+			System.out.println("Pos : "+ cosX + " " + cosY);
+			SpaceShip ss = new SpaceShip(xCircle, yCircle , 10, this);
+
+			ss.setObjective(it);
+			shipsAllPlanets.add(ss);
+			allItem.add(ss);
+		}
+		this.cptWaves++;
+		if(this.cptWaves == waves){
+			this.cptWaves = 0;
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+
 	public void generateShips(Item it, String key) {
 		int percentToSend = 0;
 		if(key == "UNKNOWN")
@@ -156,21 +188,37 @@ public class Planet extends Entity implements Serializable{
 			percentToSend = 1;
 		
 		int shipsToSend = nbShip/percentToSend;
-		for (int i = 0; i < shipsToSend; i++) {
-			
-				double xcircle = (double)this.center.getX() + ((double)(this.getWidth()+10)/2) * Math.cos(Math.toRadians((360/shipsToSend) *i));
-				double ycircle = (double)this.center.getY() + ((double)(this.getWidth()+10)/2) * Math.sin(Math.toRadians((360/shipsToSend) *i));
-				
-				double cosx = ((double)this.getWidth()/2) * Math.cos(Math.toRadians(10*i));
-				double cosy = ((double)this.getWidth()/2) * Math.sin(Math.toRadians(10*i));
-				
-				System.out.println("Pos : "+ cosx + " " + cosy);
-				SpaceShip ss = new SpaceShip(xcircle, ycircle , 10, this);
-				
-				
-				ss.setObjective(it);
-				shipsAllPlanets.add(ss);
-				allItem.add(ss);
+		int nbWaves = shipsToSend / shipsByWaves;
+		int shipsLeft = shipsToSend % shipsByWaves;
+		if(nbWaves > 0){
+			final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+			executorService.scheduleAtFixedRate(new Runnable() {
+				@Override
+				public void run() {
+					boolean allSent = false;
+					allSent = sendWave(it, nbWaves);
+					if(allSent == true){
+						executorService.shutdown();
+					}
+				}
+			}, 1, 1, TimeUnit.SECONDS);
+		}
+
+		// Envoie les nombres de vaisseaux si < shipsByWaves.
+		for (int j = 0; j < shipsLeft; j++) {
+			System.out.println("In shipsLeft " + shipsLeft);
+			double xcircle = (double)this.center.getX() + ((double)(this.getWidth()+10)/2) * Math.cos(Math.toRadians((360/shipsLeft) * j));
+			double ycircle = (double)this.center.getY() + ((double)(this.getWidth()+10)/2) * Math.sin(Math.toRadians((360/shipsLeft) * j));
+
+			double cosx = ((double)this.getWidth()/2) * Math.cos(Math.toRadians(10*j));
+			double cosy = ((double)this.getWidth()/2) * Math.sin(Math.toRadians(10*j));
+
+			System.out.println("Pos : "+ cosx + " " + cosy);
+			SpaceShip ss = new SpaceShip(xcircle, ycircle , 10, this);
+
+			ss.setObjective(it);
+			shipsAllPlanets.add(ss);
+			allItem.add(ss);
 		}
 		System.out.println("Sent :  " + shipsToSend +" ships");
 		nbShip = nbShip - shipsToSend;

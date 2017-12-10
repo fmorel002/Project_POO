@@ -91,7 +91,7 @@ class SpaceShip extends Entity implements Serializable{
 				int planWidth = Planet.getPlanetFromCoord(tmp).getWidth();
 
 				if(planX > newx && planY + planWidth > newy){
-					center.setLocation(newx - 3, newy - 1);
+					center.setLocation(newx - 3, newy - 5); // -1 avant
 					//System.out.println("route 1 path finding");
 				}
 				else if(planX + planWidth > newx && planY + planWidth > newy){

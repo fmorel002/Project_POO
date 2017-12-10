@@ -40,7 +40,6 @@ public class MouseListener implements MouseHandler<Item> {
 		System.out.println("Drag& Drop :" + dragList + " => " + arg0 + " using " + arg1.toString());
 		if(!arg0.isEmpty()){
 			for (Item item : dragList) {
-				
 				if(item instanceof Planet && ((Planet) item).getType() == PlanetType.PLAYER)
 				{
 					Planet p = (Planet) item;
