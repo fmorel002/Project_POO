@@ -23,7 +23,7 @@ public class Entity extends Item implements Serializable{
 	public void move() {}
 
 	/**
-	 * @brief Permet de dessiner un élément graphique avec la bonne couleur. (Vert joueur, Rouge IA).
+	 *  Permet de dessiner un élément graphique avec la bonne couleur. (Vert joueur, Rouge IA).
 	 *
 	 * @param arg0
 	 * 			  L'élément graphique à dessiné.
@@ -43,7 +43,7 @@ public class Entity extends Item implements Serializable{
 	}
 
 	/**
-	 * @brief Permet de savoir si un point est dans un élément de l'application.
+	 *  Permet de savoir si un point est dans un élément de l'application.
 	 *
 	 * @param p
 	 * 			Le point pour lequel il faut savoir s'il est dans l'Entity ou non.

@@ -139,7 +139,7 @@ public class Run implements ApplicationRunnable<Item> {
 	}
 
 	/**
-	 * @brief Créer un fichier de sauvegarde dans /saves dans le dossier du projet. On écrit dedans toutes les instances des classes sérializable contenu dans la liste allItem.
+	 * Créer un fichier de sauvegarde dans /saves dans le dossier du projet. On écrit dedans toutes les instances des classes sérializable contenu dans la liste allItem.
 	 */
 	public static void saveGame(){
 		try {
@@ -160,7 +160,7 @@ public class Run implements ApplicationRunnable<Item> {
 	}
 
 	/**
-	 * @biref Permet de recharger la partie contenue dans /saves. On vide toutes les listes avant de les remplir avec les instances de classes contenues dans le fichier.
+	 * Permet de recharger la partie contenue dans /saves. On vide toutes les listes avant de les remplir avec les instances de classes contenues dans le fichier.
 	 */
 	public static void loadGame(){
 		planets.clear();

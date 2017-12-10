@@ -61,7 +61,7 @@ class SpaceShip extends Entity implements Serializable{
 	}
 
 	/**
-	 * @brief Permet de mettre à jour les coodronnées d'un vaisseau pour atteindre son objectif. Dans cette fonction se trouve l'évitement des planètes. On met à jour les variables de classe s'il est arrivé.
+	 *  Permet de mettre à jour les coodronnées d'un vaisseau pour atteindre son objectif. Dans cette fonction se trouve l'évitement des planètes. On met à jour les variables de classe s'il est arrivé.
 	 */
 
 	public void move() {

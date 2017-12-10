@@ -67,7 +67,7 @@ public class Planet extends Entity implements Serializable{
 	}
 	
 	/**
-	 * @brief Genere une taille de planète aléatoire compris entre widthMax et widthMin
+	 *  Genere une taille de planète aléatoire compris entre widthMax et widthMin
 	 * @return la taille générée
 	 */
 	public static int generatePlanetWidth(){
@@ -76,8 +76,7 @@ public class Planet extends Entity implements Serializable{
 	}
 	
 	/**
-	 * @brief Genere une vitesse de production de vaisseaux aléatoirement pour une planète JOUEUR compris entre speedProductionMax et speedProductionMin
-	 * @return la vitesse de production générée
+	 *  Genere une vitesse de production de vaisseaux aléatoirement pour une planète JOUEUR compris entre speedProductionMax et speedProductionMin
 	 */
 	public static void setPlanetProduction(){
 		Random r = new Random();
@@ -89,8 +88,7 @@ public class Planet extends Entity implements Serializable{
 	}
 	
 	/**
-	 * @brief Genere une vitesse de production de vaisseaux aléatoirement pour une planète NEUTRE compris entre speedProductionNeutralMin et speedProductionNeutralMin
-	 * @return la vitesse de production générée
+	 *  Genere une vitesse de production de vaisseaux aléatoirement pour une planète NEUTRE compris entre speedProductionNeutralMin et speedProductionNeutralMin
 	 */
 	public static void setPlanetProductionNeutral(){
 		Random r = new Random();
@@ -110,7 +108,7 @@ public class Planet extends Entity implements Serializable{
 	}
 	
 	/**
-	 * @brief Met à jour la planète en fonction des entrées des vaissaux (Changement de propriétaire, MAJ du nombre de vaisseaux)
+	 *  Met à jour la planète en fonction des entrées des vaissaux (Changement de propriétaire, MAJ du nombre de vaisseaux)
 	 */
 	public void shipsArrived(){
 		
@@ -163,7 +161,7 @@ public class Planet extends Entity implements Serializable{
 	}
 
 	/*
-	 * @brief Appelé par un timer cette fonction incrémente de 1 le nombre de vaisseau sur la planète
+	 *  Appelé par un timer cette fonction incrémente de 1 le nombre de vaisseau sur la planète
 	 */
 	public void update() {
 		if (this.getType() != PlanetType.NEUTRAL)
@@ -171,7 +169,7 @@ public class Planet extends Entity implements Serializable{
 	}
 
 	/*
-	 * @brief Envoie des vagues de vaisseaux depuis la planète d'origine d'un montant de vaissaux égale à shipsByWaves
+	 *  Envoie des vagues de vaisseaux depuis la planète d'origine d'un montant de vaissaux égale à shipsByWaves
 	 * @param it : Liste d'item
 	 * @param waves : nombre de wave à envoyer 
 	 */
@@ -221,7 +219,7 @@ public class Planet extends Entity implements Serializable{
 	}
 
 	/*
-	 * @brief Envoie des vaisseaux en fonction des paramètre envoyer par l'utilisateur via le clavier
+	 *  Envoie des vaisseaux en fonction des paramètre envoyer par l'utilisateur via le clavier
 	 * @param it : Liste d'item
 	 * @param key : touche du clavier
 	 */
@@ -284,8 +282,8 @@ public class Planet extends Entity implements Serializable{
 	
 	
 	/**
-	 * @brief Return the planet at a specific coordinate, null if not.
-	 * 
+	 * @param p : Point2D
+	 * @return  retourne la planète a des coordonées spécifique sinon null
 	 */
 	public static Planet getPlanetFromCoord(Point2D p) {
 		for (Planet plan : allPlanets) {
@@ -308,14 +306,16 @@ public class Planet extends Entity implements Serializable{
 	}
 
 	/**
-	 * @brief Found a valid position to place a new planet
+	 *  Cherche une position valide pour la planète
 	 * @param width
-	 *            : width of the window
+	 *            : largeur fenetre
 	 * @param height
-	 *            : height of the window
+	 *            : hauteur fenetre
 	 * @param planets
-	 *            : List of all planet on the map
-	 * 
+	 *            : listes des planètes
+	 * @param planetSize
+	 *            : Taille de la planète
+	 * @return valide position sinon -1
 	 */
 	public static Point2D findPlanetPosition(int width, int height, ArrayList<Planet> planets, int planetSize) {
 		final int nbTry = 1000; // nombre d'essai max pour trouver une pos valide
@@ -355,7 +355,7 @@ public class Planet extends Entity implements Serializable{
 	}
 
 	/*
-	 * @brief Incrémente le nombre de vaisseau des planètes neutres
+	 *  Incrémente le nombre de vaisseau des planètes neutres
 	 */
 	public void updateNeutral() {
 		if(this.type == PlanetType.NEUTRAL){
@@ -364,7 +364,7 @@ public class Planet extends Entity implements Serializable{
 	}
 	
 	/*
-	 * @brief Intelligence Articificiel du personnage non joueur
+	 *  Intelligence Articificiel du personnage non joueur
 	 */
 	public static void updateIA()
 	{
@@ -402,7 +402,7 @@ public class Planet extends Entity implements Serializable{
 	}
 
 	/*
-	 * @brief Met à jour l'objectif de tous les vaisseau posséder l'ID de l'escadron passé en paramètre
+	 *  Met à jour l'objectif de tous les vaisseau posséder l'ID de l'escadron passé en paramètre
 	 * @param objective : nouvelle objectif
 	 * @param escadronID : ID de l'escadron à comparer
 	 */
