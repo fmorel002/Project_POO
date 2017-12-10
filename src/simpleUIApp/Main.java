@@ -31,6 +31,7 @@ public class Main {
 			int planetSize = Planet.generatePlanetWidth();
 			Point2D p = Planet.findPlanetPosition(win_width, win_height, listPlanets,planetSize);
 
+			//On s'assure d'avoir une planète joueur et IA au moins.
 			if (p.getX() != -1) {
 				if (cptPlanete == 0)
 					listPlanets.add(new Planet(p.getX(), p.getY(), planetSize, PlanetType.PLAYER, allItemList,listPlanets));
@@ -49,7 +50,7 @@ public class Main {
 
 		Manager manager = new Manager();
 		
-		//On passe en param�tre listPlanets à Run pour faire les updates (augmenter nombre vaisseaux, vérifier si win ou pas)
+		//On passe en param�tre listPlanets à Run pour faire les updates (augmenter nombre vaisseaux, vérifier si win ou pas)
 		Run r = new Run(win_width, win_height, listPlanets, allItemList, spaceShipList);
 
 		/*

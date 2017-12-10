@@ -60,6 +60,10 @@ class SpaceShip extends Entity implements Serializable{
 		this.objective = o;
 	}
 
+	/**
+	 * @brief Permet de mettre à jour les coodronnées d'un vaisseau pour atteindre son objectif. Dans cette fonction se trouve l'évitement des planètes. On met à jour les variables de classe s'il est arrivé.
+	 */
+
 	public void move() {
 		if (!objective.contains(this.center)) {
 			isMoving = true;
@@ -94,19 +98,15 @@ class SpaceShip extends Entity implements Serializable{
 
 				if(planX > newx && planY + planWidth > newy){
 					center.setLocation(newx - 3, newy - 5); // -1 avant
-					//System.out.println("route 1 path finding");
 				}
 				else if(planX + planWidth > newx && planY + planWidth > newy){
 					center.setLocation(newx + 2, newy - 3); // - 4 possible aussi
-					//System.out.println("route 2 path finding");
 				}
 				else if(planX + planWidth < newx && planY + planWidth < newy){
 					center.setLocation(newx + 1, newy - 3);
-					//System.out.println("route 3 path finding");
 				}
 				else if(planX + planWidth > newx && planY + planWidth < newy){
 					center.setLocation(newx - 1, newy - 3);
-					//System.out.println("route 4 path finding");
 				}
 			}
 		} else {
