@@ -40,16 +40,22 @@ public class MouseListener implements MouseHandler<Item> {
 		System.out.println("Drag& Drop :" + dragList + " => " + arg0 + " using " + arg1.toString());
 		if (!arg0.isEmpty()) {
 			for (Item item : dragList) {
+				
+				// Pour chaque item, on teste si c'est une planète du joueur
 				if (item instanceof Planet && ((Planet) item).getType() == PlanetType.PLAYER) 
 				{
+					// On change l'objectif de la planète et on lance la génération des vaissaux
 					Planet p = (Planet) item;
 					p.setObjective(arg0.get(0));
 					p.generateShips(arg0.get(0), arg1.toString());
 					
+				// Pour chaque item on test si c'est un vaisseau et qu'il appartienne au joueur
 				} else if (item instanceof SpaceShip && !((SpaceShip) item).IsIaShip()) {
 					SpaceShip s = (SpaceShip) item;
-
+					
+					// On teste que arg0 soit bien une planète
 					if (arg0.get(0) instanceof Planet) {
+						// On met à jour l'esacadron correspondant vers son nouvel objectif
 						Planet p = (Planet) arg0.get(0);
 						s.setObjective(p);
 						Planet.updateEscadronsObjective(s.getObjective(),s.getEscadronID());
