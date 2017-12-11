@@ -13,6 +13,7 @@ class SpaceShip extends Entity implements Serializable{
 	private boolean IA;
 	private boolean isMoving;
 	private int escadronID;
+	private boolean isBarbare;
 	
 	public SpaceShip(double x, double y, int w, Planet p) {
 		super(x, y, w, new Color(119,136,153));
@@ -30,10 +31,22 @@ class SpaceShip extends Entity implements Serializable{
 			this.setColor(new Color(165,42,42));
 			this.IA = true;
 		}
-			
+
+		isBarbare = false;
 		objective = this;
 		belongs = p;
 	}
+
+	public SpaceShip(double x, double y, int w) {
+		super(x, y, w, new Color(0,0,0));
+		isMoving = false;
+		this.escadronID = -1;
+
+		isBarbare = true;
+		objective = this;
+	}
+
+	public boolean isBarbare(){ return isBarbare; }
 
 	public Planet getBelongs() {
 		return belongs;

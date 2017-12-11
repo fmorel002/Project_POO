@@ -1,5 +1,6 @@
 package simpleUIApp;
 
+import java.awt.geom.Point2D;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -8,6 +9,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Random;
 
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
@@ -87,7 +89,6 @@ public class Run implements ApplicationRunnable<Item> {
 		
 		// On met a jour les plan�tes et on teste la fin de partie
 		Application.timer(Planet.getSpeedProduction(), new TimerRunnable() {
-
 			public void run(TimerTask timerTask) {
 				int cptIAP = 0, cptPP = 0;
 				for (Planet p : planets) {
@@ -136,6 +137,47 @@ public class Run implements ApplicationRunnable<Item> {
 				Planet.updateIA();
 			}
 		});
+
+		Application.timer(5000, new TimerRunnable() {
+			public void run(TimerTask timerTask) {
+				createBarbares();
+			}
+		});
+	}
+
+	public void createBarbares(){
+		if(Math.random() > 0.5){
+			ArrayList<SpaceShip> tmp = new ArrayList<SpaceShip>();
+			int nbBarbMax = 10;
+			int nbBarbMin = 5;
+			int numBarb = (int)(Math.random() * ((nbBarbMax + 1) - nbBarbMin)) + nbBarbMin;
+			for(int i = 0; i < numBarb; i++){
+				//On choisit aléatoirement la planète à attaquer
+				Random rand = new Random();
+				int planetObjectiveSelected = rand.nextInt(planets.size());
+
+				//On choisit des coordonnées aléatoires pour les vaisseaux, qui ne soient pas sous une planète.
+				boolean found = false;
+				int nbTry = 1000;
+				int xShip;
+				int yShip;
+				do {
+					xShip = rand.nextInt(800);
+					yShip = rand.nextInt(600);
+					if(Planet.getPlanetFromCoord(new Point2D.Double(xShip, yShip)) == null){
+						found = true;
+					}
+					nbTry--;
+				}
+				while(!found || (nbTry == 0));
+
+				SpaceShip barb = new SpaceShip(xShip, yShip, 10);
+				barb.setObjective(planets.get(planetObjectiveSelected));
+				tmp.add(barb);
+			}
+			spaceShipsList.addAll(tmp);
+			allItem.addAll(tmp);
+		}
 	}
 
 	/**

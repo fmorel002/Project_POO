@@ -22,34 +22,34 @@ public class Planet extends Entity implements Serializable{
 	}
 
 	private static ArrayList<SpaceShip> shipsAllPlanets; // Liste des Vaisseaux
-	private static ArrayList<Planet> allPlanets; // Liste des planètes
-	private static ArrayList<Item> allItem; // Liste de tous les éléments du jeu
+	private static ArrayList<Planet> allPlanets; // Liste des planï¿½tes
+	private static ArrayList<Item> allItem; // Liste de tous les ï¿½lï¿½ments du jeu
 	
-	// Variables gérant la production de vaisseaux des planètes joueurs ( change à chaque partie)
+	// Variables gï¿½rant la production de vaisseaux des planï¿½tes joueurs ( change ï¿½ chaque partie)
 	private final static int speedProductionMax = 1000;
 	private final static int speedProductionMin = 300;
 	private static int speedProduction;
 	
-	// Variables gérant la production de vaisseaux des planètes neutres ( change à chaque partie)
+	// Variables gï¿½rant la production de vaisseaux des planï¿½tes neutres ( change ï¿½ chaque partie)
 	private final static int speedProductionNeutralMax = 2000;
 	private final static int speedProductionNeutralMin = 1500;
 	private static int speedProductionNeutral;
-	private boolean sick; // indique si la planète est malade
+	private boolean sick; // indique si la planï¿½te est malade
 	
-	// Taille min/max des palnètes
+	// Taille min/max des palnï¿½tes
 	private final static int widthMax = 70;
 	private final static int widthMin = 40;
 
 	// Nombre de vaisseaux max par escadrons
 	private final static int shipsByWaves = 15;
 	
-	// Type de planète (NEUTRAL/IA/PLAYER)
+	// Type de planï¿½te (NEUTRAL/IA/PLAYER)
 	private PlanetType type;
 	
-	// Nombre de vaisseaux sur la planète
+	// Nombre de vaisseaux sur la planï¿½te
 	private int nbShip = 0;
 	
-	// Nombre de wave de vaisseaux à envoyer
+	// Nombre de wave de vaisseaux ï¿½ envoyer
 	private int cptWaves = 0;
 
 	public Planet(double x, double y, int width, PlanetType type, ArrayList<Item> it,
@@ -62,19 +62,16 @@ public class Planet extends Entity implements Serializable{
 		else if (type == PlanetType.IA)
 			this.setColor(new Color(165, 42, 42));
 		
-		// Par défaut une planète n'est pas malade
+		// Par dï¿½faut une planï¿½te n'est pas malade
 		this.sick = false;
 		
-		// Si la planète est neutre, on lui attribue une petite chance d'être malade
+		// Si la planï¿½te est neutre, on lui attribue une petite chance d'ï¿½tre malade
 		if(this.type == PlanetType.NEUTRAL)
 		{
 			if(Math.round(Math.random() * 11) > 8)
 			{
 				this.sick = true;
-				System.out.println("1");
 			}
-			else
-				System.out.println("0");
 		}
 		
 		allItem = it;
@@ -83,8 +80,8 @@ public class Planet extends Entity implements Serializable{
 	}
 	
 	/**
-	 *  Genere une taille de planète aléatoire compris entre widthMax et widthMin
-	 * @return la taille générée
+	 *  Genere une taille de planï¿½te alï¿½atoire compris entre widthMax et widthMin
+	 * @return la taille gï¿½nï¿½rï¿½e
 	 */
 	public static int generatePlanetWidth(){
 		Random r = new Random();
@@ -92,7 +89,7 @@ public class Planet extends Entity implements Serializable{
 	}
 	
 	/**
-	 *  Genere une vitesse de production de vaisseaux aléatoirement pour une planète JOUEUR compris entre speedProductionMax et speedProductionMin
+	 *  Genere une vitesse de production de vaisseaux alï¿½atoirement pour une planï¿½te JOUEUR compris entre speedProductionMax et speedProductionMin
 	 */
 	public static void setPlanetProduction(){
 		Random r = new Random();
@@ -104,7 +101,7 @@ public class Planet extends Entity implements Serializable{
 	}
 	
 	/**
-	 *  Genere une vitesse de production de vaisseaux aléatoirement pour une planète NEUTRE compris entre speedProductionNeutralMin et speedProductionNeutralMin
+	 *  Genere une vitesse de production de vaisseaux alï¿½atoirement pour une planï¿½te NEUTRE compris entre speedProductionNeutralMin et speedProductionNeutralMin
 	 */
 	public static void setPlanetProductionNeutral(){
 		Random r = new Random();
@@ -124,7 +121,7 @@ public class Planet extends Entity implements Serializable{
 	}
 	
 	/**
-	 *  Met à jour la planète en fonction des entrées des vaissaux (Changement de propriétaire, MAJ du nombre de vaisseaux)
+	 *  Met ï¿½ jour la planï¿½te en fonction des entrï¿½es des vaisseaux (Changement de propriï¿½taire, MAJ du nombre de vaisseaux)
 	 */
 	public void shipsArrived(){
 		
@@ -134,23 +131,27 @@ public class Planet extends Entity implements Serializable{
 			SpaceShip ss = it.next();
 				if (ss.getBelongs() == this) { 
 								
-				// Si un ship arrive sur une planète on le
+				// Si un ship arrive sur une planï¿½te on le
 				if(this.contains(ss.getLocation()) && !ss.getMoving())
 				{
 					// Si c'est un vaisseau du joueur
 					if(!ss.IsIaShip())
 					{
-						if (this.type == PlanetType.PLAYER)
+						if (this.type == PlanetType.PLAYER && !ss.isBarbare())
 						{
 							this.nbShip ++;
 						}
 						else if(this.type == PlanetType.IA || this.type == PlanetType.NEUTRAL){
-							this.nbShip--;
-							if(this.nbShip < 0){
+							if(this.nbShip > 0)
+								this.nbShip--;
+							if(this.nbShip < 0 && !ss.isBarbare()){
 								this.type = PlanetType.PLAYER;
 								this.setColor(new Color(46, 139, 87));
 								this.nbShip = this.nbShip *(-1);
 							}
+						}
+						else if(ss.isBarbare()){
+							this.nbShip--;
 						}
 					}
 					// Si c'est un vaisseau de l'IA
@@ -177,7 +178,7 @@ public class Planet extends Entity implements Serializable{
 	}
 
 	/*
-	 *  Appelé par un timer cette fonction incrémente de 1 le nombre de vaisseau sur la planète
+	 *  Appelï¿½ par un timer cette fonction incrï¿½mente de 1 le nombre de vaisseau sur la planï¿½te
 	 */
 	public void update() {
 		if (this.getType() != PlanetType.NEUTRAL && !this.sick)
@@ -185,7 +186,7 @@ public class Planet extends Entity implements Serializable{
 		// Si malade
 		else if(this.sick && this.getType() != PlanetType.NEUTRAL )
 		{
-			// La planète a 1/2 de produire des vaisseaux
+			// La planï¿½te a 1/2 de produire des vaisseaux
 			if(Math.round(Math.random()) > 0.5)
 			{
 				// On produit un nombre random de vaisseaux
@@ -195,16 +196,16 @@ public class Planet extends Entity implements Serializable{
 	}
 
 	/*
-	 *  Envoie des vagues de vaisseaux depuis la planète d'origine d'un montant de vaissaux égale à shipsByWaves
+	 *  Envoie des vagues de vaisseaux depuis la planï¿½te d'origine d'un montant de vaisseaux ï¿½gale ï¿½ shipsByWaves
 	 * @param it : Liste d'item
-	 * @param waves : nombre de wave à envoyer 
+	 * @param waves : nombre de wave ï¿½ envoyer 
 	 */
 	public boolean sendWave(Item it, int waves){
 		
-		// On créer une liste temporaire des vaisseaux à ajouter
+		// On crï¿½er une liste temporaire des vaisseaux ï¿½ ajouter
 		ArrayList<SpaceShip> tmp = new ArrayList<SpaceShip>();
 
-		// On génère un identifiant unique pour l'esacdron
+		// On gï¿½nï¿½re un identifiant unique pour l'esacdron
 		int waveID = (int)(Math.random() * 100001);
 		
 		// Pour chaque vague on attrivue une position unique par vaisseaux
@@ -212,13 +213,13 @@ public class Planet extends Entity implements Serializable{
 			double xCircle = (double)this.center.getX() + ((double)(this.getWidth()+10)/2) * Math.cos(Math.toRadians((360/shipsByWaves) * i));
 			double yCircle = (double)this.center.getY() + ((double)(this.getWidth()+10)/2) * Math.sin(Math.toRadians((360/shipsByWaves) * i));
 
-			// On généère le vaisseau
+			// On gï¿½nï¿½ï¿½re le vaisseau
 			SpaceShip ss = new SpaceShip(xCircle, yCircle , 10, this);
 
 			// On lui donne son objectif
 			ss.setObjective(it);
 			
-			// On défini son escadron
+			// On dï¿½fini son escadron
 			ss.setEscadronID(waveID);
 			
 			// On ajoute dans la liste des vaisseaux le nouveau
@@ -242,13 +243,13 @@ public class Planet extends Entity implements Serializable{
 	}
 
 	/*
-	 *  Envoie des vaisseaux en fonction des paramètre envoyer par l'utilisateur via le clavier
+	 *  Envoie des vaisseaux en fonction des paramï¿½tre envoyer par l'utilisateur via le clavier
 	 * @param it : Liste d'item
 	 * @param key : touche du clavier
 	 */
 	public void generateShips(Item it, String key) {
 		
-		// On définie la proportion de vaissaux à envoyer
+		// On dï¿½finie la proportion de vaisseaux ï¿½ envoyer
 		int percentToSend = 0;
 		if(key == "UNKNOWN")
 			percentToSend = 2;
@@ -281,7 +282,7 @@ public class Planet extends Entity implements Serializable{
 			}
 		}
 		
-		// On génère un ID pour l'esacdron
+		// On gï¿½nï¿½re un ID pour l'esacdron
 		int waveID = (int)(Math.random() * 100001);
 		
 		
@@ -303,7 +304,7 @@ public class Planet extends Entity implements Serializable{
 	
 	/**
 	 * @param p : Point2D
-	 * @return  retourne la planète a des coordonées spécifique sinon null
+	 * @return  retourne la planï¿½te a des coordonï¿½es spï¿½cifique sinon null
 	 */
 	public static Planet getPlanetFromCoord(Point2D p) {
 		for (Planet plan : allPlanets) {
@@ -321,7 +322,7 @@ public class Planet extends Entity implements Serializable{
 		// arg0.fillRect(x - w / 2, y - w / 2, w, w);
 		arg0.fillOval(x - w / 2, y - w / 2, w, w);
 		
-		// Si la planète est malade, on effectue un contour vert
+		// Si la planï¿½te est malade, on effectue un contour vert
 		if(this.sick == true)
 		{
 			arg0.setColor(new Color(69,200,51));
@@ -335,15 +336,15 @@ public class Planet extends Entity implements Serializable{
 	}
 
 	/**
-	 *  Cherche une position valide pour la planète
+	 *  Cherche une position valide pour la planï¿½te
 	 * @param width
 	 *            : largeur fenetre
 	 * @param height
 	 *            : hauteur fenetre
 	 * @param planets
-	 *            : listes des planètes
+	 *            : listes des planï¿½tes
 	 * @param planetSize
-	 *            : Taille de la planète
+	 *            : Taille de la planï¿½te
 	 * @return valide position sinon -1
 	 */
 	public static Point2D findPlanetPosition(int width, int height, ArrayList<Planet> planets, int planetSize) {
@@ -383,7 +384,7 @@ public class Planet extends Entity implements Serializable{
 	}
 
 	/*
-	 *  Incrémente le nombre de vaisseau des planètes neutres
+	 *  Incrï¿½mente le nombre de vaisseau des planï¿½tes neutres
 	 */
 	public void updateNeutral() {
 		if(this.type == PlanetType.NEUTRAL && !this.sick){
@@ -392,7 +393,7 @@ public class Planet extends Entity implements Serializable{
 		// Si malade
 		else
 		{
-			// La planète a 1/2 de produire des vaisseaux
+			// La planï¿½te a 1/2 de produire des vaisseaux
 			if(Math.round(Math.random()) > 0.5)
 			{
 				// On produit un nombre random de vaisseaux
@@ -406,30 +407,30 @@ public class Planet extends Entity implements Serializable{
 	 */
 	public static void updateIA()
 	{
-		// 1 : On récupère la liste des planètes posséder par l'IA
+		// 1 : On rï¿½cupï¿½re la liste des planï¿½tes possï¿½der par l'IA
 		ArrayList<Planet> listIaPlanets = new ArrayList<Planet>();
 		for (Planet p : allPlanets) {
 			if (p.getType() == PlanetType.IA)
 				listIaPlanets.add(p);
 		}
 		
-		// 2 : On selectionne une planète aléatoire de cette liste
-		// Cette planète sera la planète attaquante
+		// 2 : On selectionne une planï¿½te alï¿½atoire de cette liste
+		// Cette planï¿½te sera la planï¿½te attaquante
 		Random rand = new Random();
 		
-		// SI l'IA possède des planètes
+		// SI l'IA possï¿½de des planï¿½tes
 		if(listIaPlanets.size() > 0 )
 		{
 			int planetSelected = rand.nextInt(listIaPlanets.size());
 			
-			// 3 : On selectionne une planète cible
-			// Cette planète sera la planète attaqué
-			// L'IA peut s'envoyer des troupes vers ses propres planète
+			// 3 : On selectionne une planï¿½te cible
+			// Cette planï¿½te sera la planï¿½te attaquï¿½
+			// L'IA peut s'envoyer des troupes vers ses propres planï¿½te
 			// dans ce cas la c'est juste un ajout de troupes
 			int planetObjectiveSelected = rand.nextInt(allPlanets.size());
 			
-			// 4 : Si la planète cible est la même que la planète de départ
-			// on selectionne une autre planète
+			// 4 : Si la planï¿½te cible est la mï¿½me que la planï¿½te de dï¿½part
+			// on selectionne une autre planï¿½te
 			while(listIaPlanets.get(planetSelected) == allPlanets.get(planetObjectiveSelected))
 				planetObjectiveSelected = rand.nextInt(allPlanets.size());
 			
@@ -440,9 +441,9 @@ public class Planet extends Entity implements Serializable{
 	}
 
 	/*
-	 *  Met à jour l'objectif de tous les vaisseau posséder l'ID de l'escadron passé en paramètre
+	 *  Met ï¿½ jour l'objectif de tous les vaisseau possï¿½der l'ID de l'escadron passï¿½ en paramï¿½tre
 	 * @param objective : nouvelle objectif
-	 * @param escadronID : ID de l'escadron à comparer
+	 * @param escadronID : ID de l'escadron ï¿½ comparer
 	 */
 	public static void updateEscadronsObjective(Item objective, int escadronID) {
 		for (SpaceShip s : shipsAllPlanets) {
