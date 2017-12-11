@@ -142,7 +142,7 @@ public class Planet extends Entity implements Serializable{
 							this.nbShip ++;
 						}
 						else if(this.type == PlanetType.IA || this.type == PlanetType.NEUTRAL){
-							if(this.nbShip > 0)
+							if(this.nbShip >= 0)
 								this.nbShip--;
 							if(this.nbShip < 0 && !ss.isBarbare()){
 								this.type = PlanetType.PLAYER;

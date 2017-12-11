@@ -38,17 +38,13 @@ public class KeyListener implements KeyHandler {
 	public void keyTyped(char arg0) {
 		switch (arg0) {
 			case '+':
-				System.out.println("+ has been typed");
 				break;
 			case '-':
-				System.out.println("- has been typed");
 				break;
 			case 's':
-				System.out.println("s for Saving has been typed");
 				Run.saveGame();
 				break;
 			case 'l':
-				System.out.println("l for Loading has been typed");
 				Run.loadGame();
 				break;
 			default:
