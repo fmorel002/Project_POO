@@ -1,5 +1,6 @@
 package simpleUIApp;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.io.Serializable;
@@ -33,6 +34,7 @@ public class Planet extends Entity implements Serializable{
 	private final static int speedProductionNeutralMax = 2000;
 	private final static int speedProductionNeutralMin = 1500;
 	private static int speedProductionNeutral;
+	private boolean sick; // indique si la planète est malade
 	
 	// Taille min/max des palnètes
 	private final static int widthMax = 70;
@@ -59,8 +61,22 @@ public class Planet extends Entity implements Serializable{
 			this.setColor(new Color(46, 139, 87));
 		else if (type == PlanetType.IA)
 			this.setColor(new Color(165, 42, 42));
-
-
+		
+		// Par défaut une planète n'est pas malade
+		this.sick = false;
+		
+		// Si la planète est neutre, on lui attribue une petite chance d'être malade
+		if(this.type == PlanetType.NEUTRAL)
+		{
+			if(Math.round(Math.random() * 11) > 8)
+			{
+				this.sick = true;
+				System.out.println("1");
+			}
+			else
+				System.out.println("0");
+		}
+		
 		allItem = it;
 		allPlanets = planets;
 
@@ -164,8 +180,18 @@ public class Planet extends Entity implements Serializable{
 	 *  Appelé par un timer cette fonction incrémente de 1 le nombre de vaisseau sur la planète
 	 */
 	public void update() {
-		if (this.getType() != PlanetType.NEUTRAL)
+		if (this.getType() != PlanetType.NEUTRAL && !this.sick)
 			nbShip++;
+		// Si malade
+		else if(this.sick && this.getType() != PlanetType.NEUTRAL )
+		{
+			// La planète a 1/2 de produire des vaisseaux
+			if(Math.round(Math.random()) > 0.5)
+			{
+				// On produit un nombre random de vaisseaux
+				nbShip += Math.round(Math.random() * 4);
+			}
+		}
 	}
 
 	/*
@@ -185,9 +211,6 @@ public class Planet extends Entity implements Serializable{
 		for (int i = 0; i < shipsByWaves; i++) {
 			double xCircle = (double)this.center.getX() + ((double)(this.getWidth()+10)/2) * Math.cos(Math.toRadians((360/shipsByWaves) * i));
 			double yCircle = (double)this.center.getY() + ((double)(this.getWidth()+10)/2) * Math.sin(Math.toRadians((360/shipsByWaves) * i));
-
-			double cosX = ((double)this.getWidth()/2) * Math.cos(Math.toRadians(10*i));
-			double cosY = ((double)this.getWidth()/2) * Math.sin(Math.toRadians(10*i));
 
 			// On généère le vaisseau
 			SpaceShip ss = new SpaceShip(xCircle, yCircle , 10, this);
@@ -267,9 +290,6 @@ public class Planet extends Entity implements Serializable{
 			double xcircle = (double)this.center.getX() + ((double)(this.getWidth()+10)/2) * Math.cos(Math.toRadians((360/shipsLeft) * j));
 			double ycircle = (double)this.center.getY() + ((double)(this.getWidth()+10)/2) * Math.sin(Math.toRadians((360/shipsLeft) * j));
 
-			double cosx = ((double)this.getWidth()/2) * Math.cos(Math.toRadians(10*j));
-			double cosy = ((double)this.getWidth()/2) * Math.sin(Math.toRadians(10*j));
-
 			SpaceShip ss = new SpaceShip(xcircle, ycircle , 10, this);
 
 			ss.setEscadronID(waveID);
@@ -300,6 +320,15 @@ public class Planet extends Entity implements Serializable{
 		arg0.setColor(c);
 		// arg0.fillRect(x - w / 2, y - w / 2, w, w);
 		arg0.fillOval(x - w / 2, y - w / 2, w, w);
+		
+		// Si la planète est malade, on effectue un contour vert
+		if(this.sick == true)
+		{
+			arg0.setColor(new Color(69,200,51));
+			arg0.setStroke(new BasicStroke(3));
+			arg0.drawOval(x - w / 2, y - w / 2, w, w);
+		}
+			
 		arg0.setColor(Color.black);
 		String text = Integer.toString(nbShip);
 		arg0.drawString(text, (int) pos.getX() - arg0.getFontMetrics().stringWidth(text) / 2, (int) pos.getY() + 5);
@@ -347,7 +376,6 @@ public class Planet extends Entity implements Serializable{
 		// Au bout de "nbTry" essais, on arrï¿½te de chercher une position valide et on
 		// affiche une erreur
 		if (nbTryCpt == nbTry) {
-			System.out.println("Impossible de trouver une position valide pour une nouvelle planete");
 			pos.setLocation(-1, -1);
 		}
 		return pos;
@@ -358,8 +386,18 @@ public class Planet extends Entity implements Serializable{
 	 *  Incrémente le nombre de vaisseau des planètes neutres
 	 */
 	public void updateNeutral() {
-		if(this.type == PlanetType.NEUTRAL){
+		if(this.type == PlanetType.NEUTRAL && !this.sick){
 			nbShip++;
+		}
+		// Si malade
+		else
+		{
+			// La planète a 1/2 de produire des vaisseaux
+			if(Math.round(Math.random()) > 0.5)
+			{
+				// On produit un nombre random de vaisseaux
+				nbShip += Math.round(Math.random() * 4);
+			}
 		}
 	}
 	
@@ -369,7 +407,7 @@ public class Planet extends Entity implements Serializable{
 	public static void updateIA()
 	{
 		// 1 : On récupère la liste des planètes posséder par l'IA
-		ArrayList<Planet> listIaPlanets = new ArrayList();
+		ArrayList<Planet> listIaPlanets = new ArrayList<Planet>();
 		for (Planet p : allPlanets) {
 			if (p.getType() == PlanetType.IA)
 				listIaPlanets.add(p);
